@@ -4,8 +4,8 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-import cache
-import config
+from app import cache
+from app import view
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGGING_DIR = os.path.join(ROOT_DIR, "logs")
@@ -16,6 +16,7 @@ logging.basicConfig(
 
 cache.init_cache(os.path.join(ROOT_DIR, "cache"))
 os.makedirs(LOGGING_DIR, exist_ok=True)
+
 
 if __name__ == "__main__":
     html_xkcd = cache.request_cached('https://xkcd.com/1912/')
@@ -51,5 +52,9 @@ if __name__ == "__main__":
     }
     logging.debug(comic)
     print(comic)
+
+    html = view.render()
+    with open('index.html', 'w', encoding='utf-8') as f:
+        f.write(html)
 
     print('done')
