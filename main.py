@@ -1,22 +1,25 @@
+import os
+
 import requests
 from bs4 import BeautifulSoup
 
 import cache
+import config
 
 # r = requests.get('http://explosm.net/comics/4922/')
 # print(r.text)
 
 # todo: try html5 parser
 
-cache.path_root ='C:\\Users\\cppmo_000\\Documents\\2018\\NewspaperWebComics\\cache'
-cache.init_cache()
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+cache.init_cache(os.path.join(ROOT_DIR, "cache"))
 
 html_xkcd = cache.request_cached('https://xkcd.com/1912/')
-html_pa = cache.request_cached('https://www.penny-arcade.com/comic')
+# html_pa = cache.request_cached('https://www.penny-arcade.com/comic')
 # print(html_pa)
 
 # xkcd
-# soup = BeautifulSoup(html['xkcd'], 'html.parser')
+# soup = BeautifulSoup(html_xkcd, 'html.parser')
 # elem_comic = soup.find(id='comic')
 # comic = {
 #     'url': 'https://xkcd.com/1912/',
