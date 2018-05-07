@@ -1,6 +1,7 @@
 from datetime import datetime
 import os
 import json
+import logging
 
 import requests
 # 'date_cached': datetime.datetime.now(),
@@ -8,13 +9,14 @@ import requests
 
 cache = {}
 PATH_ROOT = ''
+logging = logging.getLogger("root")
 
 def init_cache(path_cache):
     global PATH_ROOT
 
     PATH_ROOT = path_cache
     os.makedirs(PATH_ROOT, exist_ok=True)
-    print("Cache: {}".format(path_cache))
+    logging.debug("Cache: {}".format(path_cache))
     cache = cache_read_config()
 
 def cache_read_config():
@@ -43,17 +45,17 @@ def request_cached(request_url):
 
     # save url/read from cache
     if request_url in cache:
-        print("cached file")
+        logging.debug("cached file: {}".format(request_url))
         file = cache[request_url]['local_file']
         file_path = os.path.join(PATH_ROOT, file)
         with open(file_path, mode='r', encoding='utf8') as f:
             return f.read()
     else:
-        print("Requesting new file!")
-        print(cache)
-        # raise Exception("disabled real downloads")
+        logging.debug("Requesting new file! {}".format(request_url))
+        logging.debug(cache)
         r = requests.get(request_url)
         if not r.ok:
+            logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason))
             raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
 
         # FILENAME
@@ -62,7 +64,10 @@ def request_cached(request_url):
         with open(file_path, mode='w', encoding='utf-8') as f:
             f.write(r.text)
 
-        cache[request_url] = {'local_file': filename,}
+        cache[request_url] = {
+            'local_file': filename,
+            'download_date': datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+        }
 
     cache_write_config(cache)
     return r.text
