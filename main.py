@@ -45,16 +45,18 @@ if __name__ == "__main__":
     soup = BeautifulSoup(html_pa, 'html.parser')
     container_id = 'comicFrame'
     elem_comic = soup.find(id=container_id)
-    comic = {
+    comic_kwargs = {
         'src': elem_comic.img['src'],
         'alt': elem_comic.img['alt'],
         'header': elem_comic.img['alt'],
     }
-    logging.debug(comic)
-    print(comic)
+    logging.debug(comic_kwargs)
+    print(comic_kwargs)
 
-    html = view.render()
+    html = view.render(comic_kwargs)
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html)
+
+    print(html)
 
     print('done')

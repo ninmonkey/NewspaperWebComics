@@ -6,6 +6,8 @@ env = Environment(
 )
 
 
-def render(**kwargs):
+def render(comic_kwargs):
     template = env.get_template('main.jinja2')
-    return template.render(html='<h1>hi</h1>')
+    print(comic_kwargs)
+    # print(comic_kwargs['header'])
+    return template.render(comic=comic_kwargs)

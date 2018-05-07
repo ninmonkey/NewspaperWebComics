@@ -2,7 +2,7 @@
 
 <head>
     <title>News Web Comics</title>
-    <link rel="stylesheet" type="text/css" href="static/main.css">
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
     <script>
     </script>
 </head>
@@ -10,7 +10,10 @@
 
 <div id="content">
 {% block body %}
-{{ html }}
+
+<h1>{{ comic['header'] }}</h1>
+<img class="comic_PA" src="{{ comic['src'] }}">
+
 {% endblock body %}
 </div>
 
