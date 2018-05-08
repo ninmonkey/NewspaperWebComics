@@ -45,6 +45,7 @@ def cache_write_config(cache):
 
 
 def request_cached(request_url):
+    # regular requests.get() with caching
     global cache
 
     # save url/read from cache
@@ -63,7 +64,7 @@ def request_cached(request_url):
             raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
 
         # FILENAME
-        filename = "{datetime}.html".format(datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"))
+        filename = "{datetime}".format(datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"))
         file_path = os.path.join(PATH_ROOT, filename)
         with open(file_path, mode='w', encoding='utf-8') as f:
             f.write(r.text)

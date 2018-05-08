@@ -8,23 +8,92 @@ from app import cache
 from app import view
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-LOGGING_DIR = os.path.join(ROOT_DIR, "logs")
+LOGGING_DIR = os.path.join(ROOT_DIR, 'logs')
 
 logging.basicConfig(
-    handlers=[logging.FileHandler(os.path.join(LOGGING_DIR, "main.log"), 'w', 'utf-8')],
+    handlers=[logging.FileHandler(os.path.join(LOGGING_DIR, 'main.log'), 'w', 'utf-8')],
     level=logging.DEBUG)
 
-cache.init_cache(os.path.join(ROOT_DIR, "cache"))
+cache.init_cache(os.path.join(ROOT_DIR, 'cache'))
 os.makedirs(LOGGING_DIR, exist_ok=True)
 
+def grab_attr(selector, attr):
+    # return one or None
+    element = soup.select(selector)
+    if element:
+        # attr = 'src'
+        return element[0][attr]
+
+    return None
+
+def grab_text(selector):
+    # return one or None
+    element = soup.select(selector)
+    if element:
+        return element[0].text
+
+    return None
+
+def new_stuff():
+    print('new: start')
+    html_xkcd = cache.request_cached('https://xkcd.com/1912/')
+    soup = BeautifulSoup(html_xkcd, 'html5lib')
+
+    selectors = {
+        'image': '#comic img',
+        'comic_title': '#ctitle',
+    }
+
+    image_src = grab_attr(selectors['image'], 'src')
+    image_alt = grab_attr(selectors['image'], 'alt')
+    # todo: xkcd requires title but some reason it fails
+    # image_title = grab_attr(selectors['image'], 'title')
+    comic_title = grab_text(selectors['comic_title'])
+
+    comic = {
+        'image_src': image_src,
+        'image_alt': image_alt,
+        # 'image_title': image_title,
+        'comic_title': comic_title,
+    }
+    """
+    image_src = #comic img
+    """
+    print(image_src)
+    print(comic)
+
+
+    html_pa = cache.request_cached('https://www.penny-arcade.com/comic')
+    soup = BeautifulSoup(html_pa, 'html5lib')
+
+    selectors = {
+        'image': '#comicFrame img',
+        'comic_title': '#comic div div h2',
+    }
+
+    image_src = grab_attr(selectors['image'], 'src')
+    image_alt = grab_attr(selectors['image'], 'alt')
+    comic_title = grab_text(selectors['comic_title'])
+
+    comic = {
+        'image_src': image_src,
+        'image_alt': image_alt,
+        # 'image_title': image_title,
+        'comic_title': comic_title,
+    }
+    """
+    image_src = #comic img
+    """
+    print(comic)
+    print('new: end')
 
 if __name__ == "__main__":
     html_xkcd = cache.request_cached('https://xkcd.com/1912/')
     html_pa = cache.request_cached('https://www.penny-arcade.com/comic')
 
     # xkcd
-    print("config: xkcd")
-    soup = BeautifulSoup(html_xkcd, 'html.parser')
+    print('config: xkcd')
+    soup = BeautifulSoup(html_xkcd, 'html5lib')  # 'html.parser'
     container_id = 'comic'
     header_id = 'ctitle'
 
@@ -58,5 +127,7 @@ if __name__ == "__main__":
         f.write(html)
 
     print(html)
+
+    new_stuff()
 
     print('done')
