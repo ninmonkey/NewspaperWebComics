@@ -18,6 +18,7 @@ logging.basicConfig(
 cache.init_cache(os.path.join(ROOT_DIR, 'cache'))
 os.makedirs(LOGGING_DIR, exist_ok=True)
 
+
 def grab_attr(soup, selector, attr):
     # return one or None
     element = soup.select(selector)
@@ -26,6 +27,7 @@ def grab_attr(soup, selector, attr):
         return element[0][attr]
 
     return None
+
 
 def grab_text(soup, selector):
     # return one or None
@@ -46,6 +48,9 @@ def fetch_comic(config):
     image_src = grab_attr(soup, config['selectors']['image'], 'src')
     if image_src.startswith("//"):
         image_src = "http://" + image_src[2:]
+
+    # img = cache.request_cached(image_src)
+
     image_alt = grab_attr(soup, config['selectors']['image'], 'alt')
     comic_title = grab_text(soup, config['selectors']['comic_title'])
 

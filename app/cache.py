@@ -68,8 +68,12 @@ def request_cached(request_url):
         # FILENAME
         filename = "{datetime}".format(datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"))
         file_path = os.path.join(PATH_ROOT, filename)
-        with open(file_path, mode='w', encoding='utf-8') as f:
-            f.write(r.text)
+        if filename.lower() in ('html', 'htm'):
+            with open(file_path, mode='w', encoding='utf-8') as f:
+                f.write(r.text)
+        else:
+            with open(file_path, mode='wb') as f:
+                f.write(r.content)
 
         cache[request_url] = {
             'local_file': filename,
