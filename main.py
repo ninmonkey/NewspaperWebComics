@@ -42,7 +42,7 @@ def fetch_comic(config):
     print("Config: {}".format(name)) # wait, `name` works?!
     print(name)
     print(config)
-    html = cache.request_cached(config['url'])
+    html = cache.request_cached_text(config['url'])
     soup = BeautifulSoup(html, 'html5lib')
 
     image_src = grab_attr(soup, config['selectors']['image'], 'src')
@@ -50,11 +50,15 @@ def fetch_comic(config):
         image_src = "http://" + image_src[2:]
 
     # cache.request_cached(image_src)
+    # cached_image_src = cache.cache[image_src].get('local_file')
+    # print(cached_image_src)
+    # print("!!!")
 
-    print("!!!")
     # image_src =cache.cache[image_src]
-    print(image_src)
     # image_src = cache.cache[]
+
+    image = cache.request_cached_binary(image_src)
+    cached_image_src = cache.cache[image_src]['local_file']
 
     image_alt = grab_attr(soup, config['selectors']['image'], 'alt')
     comic_title = grab_text(soup, config['selectors']['comic_title'])
@@ -65,7 +69,8 @@ def fetch_comic(config):
         'comic_title': comic_title,
         'comic_url': config['url'],
         'image_alt': image_alt,
-        'image_src': image_src,
+        'image_src': cached_image_src,
+        # 'image_src': image_src,
     }
 
     return comic

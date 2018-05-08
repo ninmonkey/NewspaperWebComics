@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 import json
 import logging
+import mimetypes
 
 import requests
 # 'date_cached': datetime.datetime.now(),
@@ -44,20 +45,57 @@ def cache_write_config(cache):
         json.dump(cache, f, indent=4, sort_keys=True)
 
 
-# def request_cached_binary(request_url):
-#     global cache
+def request_cached_binary(request_url):
+    global cache
 
-#     if request_url in cache:
+    if request_url in cache:
+        logging.debug("cached Binary file: {}".format(request_url))
+        file = cache[request_url]['local_file']
+        file_path = os.path.join(PATH_ROOT, file)
+
+        with open(file_path, mode='rb') as f:
+            return f.read()
+    else:
+        logging.debug("Requesting new Binary file! {}".format(request_url))
+        logging.debug(cache)
+        # todo: try/catch for badname/timeouts
+            # log, then continue
+        r = requests.get(request_url)
+        if not r.ok:
+            logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason))
+            raise Exception("Error: {}, {}!".format(r.status_code, r.reason), exc_info=True)
+
+        mime_type = r.headers['content-type']
+        ext_type = mimetypes.guess_extension(mime_type)
+
+        # FILENAME
+        filename = "{datetime}{ext}".format(
+            datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"),
+            ext=ext_type)
+        file_path = os.path.join(PATH_ROOT, filename)
+        with open(file_path, mode='wb') as f:
+            f.write(r.text)
+
+        cache[request_url] = {
+            'local_file': filename,
+            'download_date': datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+            # 'content-type': 'text/html',
+            'content-type': mime_type,
+            'extension': ext_type,
+        }
+
+    cache_write_config(cache)
+    return r.text
 
 
 def request_cached_text(request_url):
     global cache
-    file_extension = '.html'
 
     if request_url in cache:
         logging.debug("cached Text file: {}".format(request_url))
         file = cache[request_url]['local_file']
         file_path = os.path.join(PATH_ROOT, file)
+
         with open(file_path, mode='r', encoding='utf8') as f:
             return f.read()
     else:
@@ -70,62 +108,64 @@ def request_cached_text(request_url):
             logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason))
             raise Exception("Error: {}, {}!".format(r.status_code, r.reason), exc_info=True)
 
+        mime_type = r.headers['content-type']
+        ext_type = mimetypes.guess_extension(mime_type)
+
         # FILENAME
         filename = "{datetime}{ext}".format(
             datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"),
-            ext=file_extension)
+            ext=ext_type)
         file_path = os.path.join(PATH_ROOT, filename)
-        if filename.lower().endswith('html', 'htm'):
-            with open(file_path, mode='w', encoding='utf-8') as f:
-                f.write(r.text)
-        else:
-            with open(file_path, mode='wb') as f:
-                f.write(r.content)
+        with open(file_path, mode='w', encoding='utf-8') as f:
+            f.write(r.text)
 
         cache[request_url] = {
             'local_file': filename,
             'download_date': datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+            'content-type': mime_type,
+            'extension': ext_type,
         }
 
     cache_write_config(cache)
     return r.text
 
 
-def request_cached(request_url):
-    # regular requests.get() with caching
-    global cache
+# def request_cached(request_url):
 
-    # save url/read from cache
-    if request_url in cache:
-        logging.debug("cached file: {}".format(request_url))
-        file = cache[request_url]['local_file']
-        file_path = os.path.join(PATH_ROOT, file)
-        with open(file_path, mode='r', encoding='utf8') as f:
-            return f.read()
-    else:
-        logging.debug("Requesting new file! {}".format(request_url))
-        logging.debug(cache)
-        # todo: try/catch for badname/timeouts
-            # log, then continue
-        r = requests.get(request_url)
-        if not r.ok:
-            logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason))
-            raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
+#     # regular requests.get() with caching
+#     global cache
 
-        # FILENAME
-        filename = "{datetime}.html".format(datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"))
-        file_path = os.path.join(PATH_ROOT, filename)
-        if filename.lower() in ('html', 'htm'):
-            with open(file_path, mode='w', encoding='utf-8') as f:
-                f.write(r.text)
-        else:
-            with open(file_path, mode='wb') as f:
-                f.write(r.content)
+#     # save url/read from cache
+#     if request_url in cache:
+#         logging.debug("cached file: {}".format(request_url))
+#         file = cache[request_url]['local_file']
+#         file_path = os.path.join(PATH_ROOT, file)
+#         with open(file_path, mode='r', encoding='utf8') as f:
+#             return f.read()
+#     else:
+#         logging.debug("Requesting new file! {}".format(request_url))
+#         logging.debug(cache)
+#         # todo: try/catch for badname/timeouts
+#             # log, then continue
+#         r = requests.get(request_url)
+#         if not r.ok:
+#             logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason))
+#             raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
 
-        cache[request_url] = {
-            'local_file': filename,
-            'download_date': datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
-        }
+#         # FILENAME
+#         filename = "{datetime}".format(datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"))
+#         file_path = os.path.join(PATH_ROOT, filename)
+#         if filename.lower().endswith(('html', 'htm')):
+#             with open(file_path, mode='w', encoding='utf-8') as f:
+#                 f.write(r.text)
+#         else:
+#             with open(file_path, mode='wb') as f:
+#                 f.write(r.content)
 
-    cache_write_config(cache)
-    return r.text
+#         cache[request_url] = {
+#             'local_file': filename,
+#             'download_date': datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+#         }
+
+#     cache_write_config(cache)
+#     return r.text
