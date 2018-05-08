@@ -54,6 +54,8 @@ def fetch_comic(config):
         'image_alt': image_alt,
         'comic_title': comic_title,
         'comic_class': config['class'],
+        'comic_url': config['url'],
+        'comic_name': name,
     }
 
     return comic
