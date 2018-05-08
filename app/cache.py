@@ -58,6 +58,8 @@ def request_cached(request_url):
     else:
         logging.debug("Requesting new file! {}".format(request_url))
         logging.debug(cache)
+        # todo: try/catch for badname/timeouts
+            # log, then continue
         r = requests.get(request_url)
         if not r.ok:
             logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason))

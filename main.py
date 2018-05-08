@@ -37,21 +37,26 @@ def grab_text(soup, selector):
 
 
 def fetch_comic(config):
-    print("Config: {}".format(name))
+    print("Config: {}".format(name)) # wait, `name` works?!
     print(name)
     print(config)
     html = cache.request_cached(config['url'])
     soup = BeautifulSoup(html, 'html5lib')
 
     image_src = grab_attr(soup, config['selectors']['image'], 'src')
+    if image_src.startswith("//"):
+        image_src = "http://" + image_src[2:]
     image_alt = grab_attr(soup, config['selectors']['image'], 'alt')
     comic_title = grab_text(soup, config['selectors']['comic_title'])
 
-    return {
+    comic = {
         'image_src': image_src,
         'image_alt': image_alt,
         'comic_title': comic_title,
+        'comic_class': config['class'],
     }
+
+    return comic
 
 if __name__ == "__main__":
     comics = []
@@ -59,102 +64,10 @@ if __name__ == "__main__":
         comics.append(fetch_comic(config.config[name]))
 
     print(comics)
-    print("Done.")
+    logging.debug(comics)
 
-def new_stuff():
-    print('new: start')
-    html_xkcd = cache.request_cached('https://xkcd.com/1912/')
-    soup = BeautifulSoup(html_xkcd, 'html5lib')
-
-    selectors = {
-        'image': '#comic img',
-        'comic_title': '#ctitle',
-    }
-
-    image_src = grab_attr(selectors['image'], 'src')
-    image_alt = grab_attr(selectors['image'], 'alt')
-    # todo: xkcd requires title but some reason it fails
-    # image_title = grab_attr(selectors['image'], 'title')
-    comic_title = grab_text(selectors['comic_title'])
-
-    comic = {
-        'image_src': image_src,
-        'image_alt': image_alt,
-        # 'image_title': image_title,
-        'comic_title': comic_title,
-    }
-    """
-    image_src = #comic img
-    """
-    print(image_src)
-    print(comic)
-
-
-    html_pa = cache.request_cached('https://www.penny-arcade.com/comic')
-    soup = BeautifulSoup(html_pa, 'html5lib')
-
-    selectors = {
-        'image': '#comicFrame img',
-        'comic_title': '#comic div div h2',
-    }
-
-    image_src = grab_attr(selectors['image'], 'src')
-    image_alt = grab_attr(selectors['image'], 'alt')
-    comic_title = grab_text(selectors['comic_title'])
-
-    comic = {
-        'image_src': image_src,
-        'image_alt': image_alt,
-        # 'image_title': image_title,
-        'comic_title': comic_title,
-    }
-    """
-    image_src = #comic img
-    """
-    print(comic)
-    print('new: end')
-
-if False:
-    html_xkcd = cache.request_cached('https://xkcd.com/1912/')
-    html_pa = cache.request_cached('https://www.penny-arcade.com/comic')
-
-    # xkcd
-    print('config: xkcd')
-    soup = BeautifulSoup(html_xkcd, 'html5lib')  # 'html.parser'
-    container_id = 'comic'
-    header_id = 'ctitle'
-
-    elem_comic = soup.find(id=container_id)
-    elem_header = soup.find(id=header_id)
-    comic = {
-        # 'url': 'https://xkcd.com/1912/',
-        'src': elem_comic.img['src'],
-        'alt': elem_comic.img['alt'],
-        'title': elem_comic.img['title'],
-        'header': elem_header.text
-        # 'prev':,
-    }
-    logging.debug(comic)
-    print(comic)
-
-    print("config: PA")
-    soup = BeautifulSoup(html_pa, 'html.parser')
-    container_id = 'comicFrame'
-    elem_comic = soup.find(id=container_id)
-    comic_kwargs = {
-        'src': elem_comic.img['src'],
-        'alt': elem_comic.img['alt'],
-        'header': elem_comic.img['alt'],
-    }
-    logging.debug(comic_kwargs)
-    print(comic_kwargs)
-
-    html = view.render(comic_kwargs)
+    html = view.render(comics)
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html)
 
-    print(html)
-
-    new_stuff()
-
-    print('done')
+    print("Done.")
