@@ -1,7 +1,12 @@
 # NewspaperWebComics
 
+if this app breaks, edit config.json with new CSS selectors
+
 # todo
 
+- why does image['title'] fail?
+    - related to using html5lib ?
+    
 - make image url use cache images
 - move html output to /html/
 - make array of dicts passed to render

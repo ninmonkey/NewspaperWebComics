@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 from app import cache
 from app import view
+from app import config
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGGING_DIR = os.path.join(ROOT_DIR, 'logs')
@@ -17,7 +18,7 @@ logging.basicConfig(
 cache.init_cache(os.path.join(ROOT_DIR, 'cache'))
 os.makedirs(LOGGING_DIR, exist_ok=True)
 
-def grab_attr(selector, attr):
+def grab_attr(soup, selector, attr):
     # return one or None
     element = soup.select(selector)
     if element:
@@ -26,13 +27,39 @@ def grab_attr(selector, attr):
 
     return None
 
-def grab_text(selector):
+def grab_text(soup, selector):
     # return one or None
     element = soup.select(selector)
     if element:
         return element[0].text
 
     return None
+
+
+def fetch_comic(config):
+    print("Config: {}".format(name))
+    print(name)
+    print(config)
+    html = cache.request_cached(config['url'])
+    soup = BeautifulSoup(html, 'html5lib')
+
+    image_src = grab_attr(soup, config['selectors']['image'], 'src')
+    image_alt = grab_attr(soup, config['selectors']['image'], 'alt')
+    comic_title = grab_text(soup, config['selectors']['comic_title'])
+
+    return {
+        'image_src': image_src,
+        'image_alt': image_alt,
+        'comic_title': comic_title,
+    }
+
+if __name__ == "__main__":
+    comics = []
+    for name in config.config:
+        comics.append(fetch_comic(config.config[name]))
+
+    print(comics)
+    print("Done.")
 
 def new_stuff():
     print('new: start')
@@ -87,7 +114,7 @@ def new_stuff():
     print(comic)
     print('new: end')
 
-if __name__ == "__main__":
+if False:
     html_xkcd = cache.request_cached('https://xkcd.com/1912/')
     html_pa = cache.request_cached('https://www.penny-arcade.com/comic')
 
