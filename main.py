@@ -49,7 +49,12 @@ def fetch_comic(config):
     if image_src.startswith("//"):
         image_src = "http://" + image_src[2:]
 
-    # img = cache.request_cached(image_src)
+    # _ = cache.request_cached(image_src)
+
+    print("!!!")
+    image_src =cache.cache[image_src]
+    print(image_src)
+    # image_src = cache.cache[]
 
     image_alt = grab_attr(soup, config['selectors']['image'], 'alt')
     comic_title = grab_text(soup, config['selectors']['comic_title'])

@@ -44,6 +44,50 @@ def cache_write_config(cache):
         json.dump(cache, f, indent=4, sort_keys=True)
 
 
+# def request_cached_binary(request_url):
+#     global cache
+
+#     if request_url in cache:
+
+
+def request_cached_text(request_url):
+    global cache
+
+    if request_url in cache:
+        logging.debug("cached Text file: {}".format(request_url))
+        file = cache[request_url]['local_file']
+        file_path = os.path.join(PATH_ROOT, file)
+        with open(file_path, mode='r', encoding='utf8') as f:
+            return f.read()
+    else:
+        logging.debug("Requesting new Text file! {}".format(request_url))
+        logging.debug(cache)
+        # todo: try/catch for badname/timeouts
+            # log, then continue
+        r = requests.get(request_url)
+        if not r.ok:
+            logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason))
+            raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
+
+        # FILENAME
+        filename = "{datetime}.html".format(datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"))
+        file_path = os.path.join(PATH_ROOT, filename)
+        if filename.lower() in ('html', 'htm'):
+            with open(file_path, mode='w', encoding='utf-8') as f:
+                f.write(r.text)
+        else:
+            with open(file_path, mode='wb') as f:
+                f.write(r.content)
+
+        cache[request_url] = {
+            'local_file': filename,
+            'download_date': datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+        }
+
+    cache_write_config(cache)
+    return r.text
+
+
 def request_cached(request_url):
     # regular requests.get() with caching
     global cache
@@ -66,7 +110,7 @@ def request_cached(request_url):
             raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
 
         # FILENAME
-        filename = "{datetime}".format(datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"))
+        filename = "{datetime}.html".format(datetime=datetime.now().strftime("%Y %m %d - %H %M %S %f"))
         file_path = os.path.join(PATH_ROOT, filename)
         if filename.lower() in ('html', 'htm'):
             with open(file_path, mode='w', encoding='utf-8') as f:
