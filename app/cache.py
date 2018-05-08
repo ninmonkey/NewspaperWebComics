@@ -9,7 +9,8 @@ import requests
 
 cache = {}
 PATH_ROOT = ''
-logging = logging.getLogger("root")
+logging = logging.getLogger(__name__)
+
 
 def init_cache(path_cache):
     global PATH_ROOT
@@ -18,6 +19,7 @@ def init_cache(path_cache):
     os.makedirs(PATH_ROOT, exist_ok=True)
     logging.debug("Cache: {}".format(path_cache))
     cache = cache_read_config()
+
 
 def cache_read_config():
     global cache
@@ -35,10 +37,12 @@ def cache_read_config():
 
     return cache
 
+
 def cache_write_config(cache):
     json_path = os.path.join(PATH_ROOT, 'cache.json')
     with open(json_path, mode='w', encoding='utf-8') as f:
         json.dump(cache, f, indent=4, sort_keys=True)
+
 
 def request_cached(request_url):
     global cache
@@ -71,6 +75,3 @@ def request_cached(request_url):
 
     cache_write_config(cache)
     return r.text
-'''
->>> pc = os.path.normpath('C:\\Users\\cppmo_000\\Documents\\2018\\New folder\\cache', '1.html')
-'''
