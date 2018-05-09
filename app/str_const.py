@@ -1,0 +1,2 @@
+STR_DATE_FORMAT_SECONDS = '%Y/%m/%d %H:%M:%S'
+STR_DATE_FORMAT_MICROSECONDS = '%Y %m %d - %H %M %S %f'

@@ -4,6 +4,8 @@ if this app breaks, edit config.json with new CSS selectors
 
 # todo
 
+change request_cached() depending on content type 'text/html' else binary
+
 - redownload cached HTML if older than Xdays/Xhours
 - convert config.py to config.json
 
