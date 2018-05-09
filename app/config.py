@@ -6,9 +6,9 @@ config = {}
 def load_config():
     global config
 
-    path = os.path.join('config', 'config.json')
+    path = 'config'
     os.makedirs(path, exist_ok=True)
-    with open(path) as f:
+    with open(os.path.join(path, 'config.json')) as f:
         config = json.load(f)
 
 load_config()
