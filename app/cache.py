@@ -50,14 +50,10 @@ def request_cached_binary(request_url):
 
     if request_url in cache:
         logging.debug("cached Binary file: {}".format(request_url))
-        file = cache[request_url]['local_file']
-        file_path = os.path.join(PATH_ROOT, file)
-
-        with open(file_path, mode='rb') as f:
-            return f.read()
+        filename = cache[request_url]['local_file']
+        file_path = os.path.join(PATH_ROOT, filename)
     else:
-        logging.debug("Requesting new Binary file! {}".format(request_url))
-        logging.debug(cache)
+        logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
         # todo: try/catch for badname/timeouts
             # log, then continue
         r = requests.get(request_url)
@@ -66,7 +62,7 @@ def request_cached_binary(request_url):
             raise Exception("Error: {}, {}!".format(r.status_code, r.reason), exc_info=True)
 
         mime_type = r.headers['content-type']
-        ext_type = mimetypes.guess_extension(mime_type)
+        ext_type = mimetypes.guess_extension(mime_type) or ''
 
         # FILENAME
         filename = "{datetime}{ext}".format(
@@ -74,7 +70,7 @@ def request_cached_binary(request_url):
             ext=ext_type)
         file_path = os.path.join(PATH_ROOT, filename)
         with open(file_path, mode='wb') as f:
-            f.write(r.text)
+            f.write(r.content)
 
         cache[request_url] = {
             'local_file': filename,
@@ -85,7 +81,7 @@ def request_cached_binary(request_url):
         }
 
     cache_write_config(cache)
-    return r.text
+    return 'cache/' + filename
 
 
 def request_cached_text(request_url):
@@ -109,7 +105,7 @@ def request_cached_text(request_url):
             raise Exception("Error: {}, {}!".format(r.status_code, r.reason), exc_info=True)
 
         mime_type = r.headers['content-type']
-        ext_type = mimetypes.guess_extension(mime_type)
+        ext_type = mimetypes.guess_extension(mime_type) or ''
 
         # FILENAME
         filename = "{datetime}{ext}".format(

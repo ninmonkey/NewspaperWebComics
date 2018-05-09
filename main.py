@@ -11,6 +11,7 @@ from app import config
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGGING_DIR = os.path.join(ROOT_DIR, 'logs')
 
+logging.getLogger("chardet").setLevel(logging.WARNING)
 logging.basicConfig(
     handlers=[logging.FileHandler(os.path.join(LOGGING_DIR, 'main.log'), 'w', 'utf-8')],
     level=logging.DEBUG)
@@ -40,14 +41,14 @@ def grab_text(soup, selector):
 
 def fetch_comic(config):
     print("Config: {}".format(name)) # wait, `name` works?!
-    print(name)
-    print(config)
+    # print(name)
+    # print(config)
     html = cache.request_cached_text(config['url'])
     soup = BeautifulSoup(html, 'html5lib')
 
     image_src = grab_attr(soup, config['selectors']['image'], 'src')
     if image_src.startswith("//"):
-        image_src = "http://" + image_src[2:]
+        image_src = "http:" + image_src
 
     # cache.request_cached(image_src)
     # cached_image_src = cache.cache[image_src].get('local_file')
@@ -57,8 +58,8 @@ def fetch_comic(config):
     # image_src =cache.cache[image_src]
     # image_src = cache.cache[]
 
-    image = cache.request_cached_binary(image_src)
-    cached_image_src = cache.cache[image_src]['local_file']
+    image_local_filename = cache.request_cached_binary(image_src)
+    # cached_image_src = cache.cache[image_src]['local_file']
 
     image_alt = grab_attr(soup, config['selectors']['image'], 'alt')
     comic_title = grab_text(soup, config['selectors']['comic_title'])
@@ -69,7 +70,7 @@ def fetch_comic(config):
         'comic_title': comic_title,
         'comic_url': config['url'],
         'image_alt': image_alt,
-        'image_src': cached_image_src,
+        'image_src': image_local_filename,
         # 'image_src': image_src,
     }
 
