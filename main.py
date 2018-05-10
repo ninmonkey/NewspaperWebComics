@@ -1,13 +1,13 @@
+from urllib.parse import urlparse
 import logging
 import os
 
-
-import requests
 from bs4 import BeautifulSoup
+import requests
 
 from app import cache
-from app import view
 from app import config
+from app import view
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGGING_DIR = os.path.join(ROOT_DIR, 'logs')
@@ -26,7 +26,8 @@ def grab_attr(soup, selector, attr):
     element = soup.select(selector)
     if element:
         # attr = 'src'
-        return element[0][attr]
+        # print("e {}".format(element))
+        return element[0].get(attr)
 
     return None
 
@@ -54,18 +55,13 @@ def fetch_comic(config):
     if image_src.startswith("//"):
         image_src = "http:" + image_src
 
-    from urllib.parse import urlparse
-
-    print("img src: {}".format(image_src))
-    print(urlparse(image_src))
-
+    # relative urls
     if not urlparse(image_src).scheme:
-        print("Oh no")
         base = config['url'].rstrip('/')
         path = image_src.lstrip('/')
 
         image_src = "{base}/{path}".format(base=base, path=path)
-        print("New source: {}".format(image_src))
+        logging.debug("relative url, New source = {}".format(image_src))
 
     image_local_filename = cache.request_cached_binary(image_src)
     if not image_local_filename:
