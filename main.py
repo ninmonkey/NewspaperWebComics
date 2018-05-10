@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 import logging
 import os
+import random
 
 from bs4 import BeautifulSoup
 import requests
@@ -8,7 +9,9 @@ import requests
 from app import cache
 from app import config
 from app import view
+from app.app_locals import grab_attr, grab_text
 
+ALWAYS_RANDOM = False
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGGING_DIR = os.path.join(ROOT_DIR, 'logs')
 
@@ -19,29 +22,6 @@ logging.basicConfig(
 
 cache.init(os.path.join(ROOT_DIR, 'cache'))
 os.makedirs(LOGGING_DIR, exist_ok=True)
-
-
-def grab_attr(soup, selector, attr):
-    # return one or None
-    element = soup.select(selector)
-    if element:
-        # attr = 'src'
-        # print("e {}".format(element))
-        return element[0].get(attr)
-
-    return None
-
-
-def grab_text(soup, selector):
-    # return one or None
-    if not selector:
-        return ''
-
-    element = soup.select(selector)
-    if element:
-        return element[0].text
-
-    return ''
 
 
 def fetch_comic(config):
@@ -55,7 +35,7 @@ def fetch_comic(config):
     if image_src.startswith("//"):
         image_src = "http:" + image_src
 
-    # relative urls
+    # using relative url
     if not urlparse(image_src).scheme:
         base = config['url'].rstrip('/')
         path = image_src.lstrip('/')
@@ -65,11 +45,8 @@ def fetch_comic(config):
 
     image_local_filename = cache.request_cached_binary(image_src)
     if not image_local_filename:
+        logging.error("Something went wrong with: {}".format(image_src))
         raise Exception("Something went wrong with: {}".format(image_src))
-    # if not image_local_filename:
-    #     image_local_filename = cache.request_cached_binary("{domain}{path}".format(
-    #         domain=config['url'],
-    #         path=image_src))
 
     image_alt = grab_attr(soup, config['selectors']['image'], 'alt')
     comic_title = grab_text(soup, config['selectors']['comic_title'])
@@ -91,7 +68,9 @@ if __name__ == "__main__":
     for name in config.config:
         comics.append(fetch_comic(config.config[name]))
 
-    # print(comics)
+    if ALWAYS_RANDOM:
+        random.shuffle(comics)
+
     logging.debug(comics)
 
     html = view.render(comics)

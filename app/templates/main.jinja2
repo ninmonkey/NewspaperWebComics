@@ -14,15 +14,14 @@
 
 {%- for comic in comics -%}
     <h1>
-        <a href="{{ comic['comic_url'] }}">{{ comic['comic_name'] }}:</a>
-        {{ comic['comic_title'] }}
+        <a href="{{ comic['comic_url']|e }}">{{ comic['comic_name']|e }}:</a>
+        {{ comic['comic_title']|e }}
     </h1>
     {% if comic['comic_class'] %}
-        <img class="{{ comic['comic_class'] }}" src="{{ comic['image_src'] }}">
+        <img class="{{ comic['comic_class']|e }}" src="{{ comic['image_src']|e }}">
     {%- else -%}
-        <img src="{{ comic['image_src'] }}">
+        <img src="{{ comic['image_src']|e }}">
     {%- endif -%}
-    <!-- <p>{{ comic['image_alt'] }}</p> -->
 {%- endfor -%}
 
 {% endblock body %}

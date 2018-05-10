@@ -9,7 +9,7 @@
     },
     "Penny Arcade": {
         "url": "https://www.penny-arcade.com/comic",
-        "class": "PennyArcade",
+        "class": null,
         "selectors": {
             "image": "#comicFrame img",
             "comic_title": "#comic div div h2"
@@ -28,6 +28,22 @@
         "class": null,
         "selectors": {
             "image": "#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Buttersafe": {
+        "url": "http://buttersafe.com/",
+        "class": null,
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Sam & Fuzzy": {
+        "url": "http://www.samandfuzzy.com/",
+        "class": null,
+        "selectors": {
+            "image": "img.comic-image",
             "comic_title": null
         }
     }
