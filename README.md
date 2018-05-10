@@ -20,11 +20,12 @@ required:
 
 optional:
 
-    comic_title: CSS selector to grab comic title element. Fallback to image.alt
+    comic_title: CSS selector to grab comic title element. Fallback to `image.alt`
     class: name of class in CSS for special markup on a single comic
 
 # todo
 
+first:
 - redownload cached HTML if older than Xdays/Xhours
 
 - why does image['title'] fail?
@@ -40,6 +41,9 @@ optional:
 
 - use HTTPS in `fetch_comic()`, fallback to HTTP
 - utilize `srcset` ?
+
+- default selectors if config fails
+    "#comic img", "#cc-comic img", "img#comic", "img#cc-comic"
 
 # bugfix:
 

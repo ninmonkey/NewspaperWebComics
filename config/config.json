@@ -27,6 +27,13 @@
             "comic_title": null
         }
     },
+    "Perry Bible Fellowship": {
+        "url": "http://pbfcomics.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": "h1.pbf-comic-title"
+        }
+    },
     "Buttersafe": {
         "url": "http://buttersafe.com/",
         "selectors": {
@@ -132,8 +139,57 @@
             "comic_title": null
         }
     },
+    "Dumbing of Age": {
+        "url": "http://www.dumbingofage.com/",
+        "selectors": {
+            "image": "#comic-1 img",
+            "comic_title": null
+        }
+    },
+    "Girls with Slingshots": {
+        "url": "https://girlswithslingshots.com/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Gunnerkrigg": {
+        "url": "http://gunnerkrigg.com/",
+        "selectors": {
+            "image": "img.comic_image",
+            "comic_title": null
+        }
+    },
+    "Goblins Comic": {
+        "url": "http://www.goblinscomic.org/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "O Human Star Age": {
+        "url": "http://ohumanstar.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
     "Guilded Age": {
         "url": "http://guildedage.net/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Questionable Content": {
+        "url": "http://questionablecontent.net/",
+        "selectors": {
+            "image": "#comicnav + img",
+            "comic_title": null
+        }
+    },
+    "Were Geek": {
+        "url": "http://www.weregeek.com/",
         "selectors": {
             "image": "#comic img",
             "comic_title": null
