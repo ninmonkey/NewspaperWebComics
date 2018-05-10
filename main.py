@@ -54,7 +54,27 @@ def fetch_comic(config):
     if image_src.startswith("//"):
         image_src = "http:" + image_src
 
+    from urllib.parse import urlparse
+
+    print("img src: {}".format(image_src))
+    print(urlparse(image_src))
+
+    if not urlparse(image_src).scheme:
+        print("Oh no")
+        base = config['url'].rstrip('/')
+        path = image_src.lstrip('/')
+
+        image_src = "{base}/{path}".format(base=base, path=path)
+        print("New source: {}".format(image_src))
+
     image_local_filename = cache.request_cached_binary(image_src)
+    if not image_local_filename:
+        raise Exception("Something went wrong with: {}".format(image_src))
+    # if not image_local_filename:
+    #     image_local_filename = cache.request_cached_binary("{domain}{path}".format(
+    #         domain=config['url'],
+    #         path=image_src))
+
     image_alt = grab_attr(soup, config['selectors']['image'], 'alt')
     comic_title = grab_text(soup, config['selectors']['comic_title'])
 
@@ -75,7 +95,7 @@ if __name__ == "__main__":
     for name in config.config:
         comics.append(fetch_comic(config.config[name]))
 
-    print(comics)
+    # print(comics)
     logging.debug(comics)
 
     html = view.render(comics)

@@ -22,3 +22,5 @@ change request_cached() depending on content type 'text/html' else binary
 
 - should I keep stripping `//` prefixes?
     - eg: //imgs.xkcd.com/comics/thermostat.png
+
+- use HTTPS in `fetch_comic()`, fallback to HTTP
