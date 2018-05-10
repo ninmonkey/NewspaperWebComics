@@ -33,11 +33,14 @@ def grab_attr(soup, selector, attr):
 
 def grab_text(soup, selector):
     # return one or None
+    if not selector:
+        return ''
+
     element = soup.select(selector)
     if element:
         return element[0].text
 
-    return None
+    return ''
 
 
 def fetch_comic(config):
@@ -55,6 +58,7 @@ def fetch_comic(config):
     image_alt = grab_attr(soup, config['selectors']['image'], 'alt')
     comic_title = grab_text(soup, config['selectors']['comic_title'])
 
+    comic_title = comic_title or image_alt or ''
     comic = {
         'comic_class': config['class'],
         'comic_name': name,

@@ -6,8 +6,9 @@ if this app breaks, edit config.json with new CSS selectors
 
 change request_cached() depending on content type 'text/html' else binary
 
+- randomize order
+- horizontal image center
 - redownload cached HTML if older than Xdays/Xhours
-- convert config.py to config.json
 
 - request_cached()
     - use mime type to detect html/image
@@ -16,7 +17,6 @@ change request_cached() depending on content type 'text/html' else binary
     - related to using html5lib ?
 
 - move html output to /html/
-- horizontal image center
 - throttle requests to same domain
 - autogen root path based on location
 

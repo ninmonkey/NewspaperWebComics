@@ -9,10 +9,18 @@
     },
     "Penny Arcade": {
         "url": "https://www.penny-arcade.com/comic",
-        "class": "comic_PA",
+        "class": "PennyArcade",
         "selectors": {
             "image": "#comicFrame img",
             "comic_title": "#comic div div h2"
+        }
+    },
+    "Nerf Now": {
+        "url": "http://www.nerfnow.com/",
+        "class": null,
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
         }
     }
 }
