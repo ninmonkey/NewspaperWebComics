@@ -32,6 +32,11 @@ def fetch_comic(config):
     soup = BeautifulSoup(html, 'html5lib')
 
     image_src = grab_attr(soup, config['selectors']['image'], 'src')
+    if not image_src:
+        logging.error("Bad url for: {config}".format(config=config))
+        print("Bad url for: {config}".format(config=config))
+        return {}
+
     if image_src.startswith("//"):
         image_src = "http:" + image_src
 
@@ -53,7 +58,7 @@ def fetch_comic(config):
 
     comic_title = comic_title or image_alt or ''
     comic = {
-        'comic_class': config['class'],
+        'comic_class': config.get('class'),
         'comic_name': name,
         'comic_title': comic_title,
         'comic_url': config['url'],
@@ -66,7 +71,9 @@ def fetch_comic(config):
 if __name__ == "__main__":
     comics = []
     for name in config.config:
-        comics.append(fetch_comic(config.config[name]))
+        comic = fetch_comic(config.config[name])
+        if comic:
+            comics.append(comic)
 
     if ALWAYS_RANDOM:
         random.shuffle(comics)

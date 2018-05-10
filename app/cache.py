@@ -61,7 +61,7 @@ def request_cached_binary(request_url):
         return 'cache/' + filename
     else:
         logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
-        print("Requesting new Binary file! {}\n{}".format(request_url, cache))
+        print("Requesting new Binary file! {}".format(request_url))
         # todo: try/catch for badname/timeouts
             # log, then continue
         r = requests.get(request_url)
