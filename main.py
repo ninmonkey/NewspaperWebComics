@@ -35,19 +35,35 @@ def fetch_comic(config, name):
         print("Bad selector for: {config}".format(config=config))
         return {}
 
-    if image_src.startswith("//"):
-        # todo: try https, fallback to http
-        image_src = "http:" + image_src
+    print(". ", urlparse(config['url']))
+    parsed = urlparse(config['url'])
+
+
+
+    # if parsed.path:
+
+    # if image_src.startswith("//"):
+    #     # todo: try https, fallback to http
+    #     image_src = "http:" + image_src
 
     # using relative url
-    if not urlparse(image_src).scheme:
-        raise Exception("todo: instead of config['url'] base use urlparse output")
-        base = config['url'].rstrip('/')
-        path = image_src.lstrip('/')
+    # if not urlparse(image_src).scheme:
+        # raise Exception("todo: instead of config['url'] base use urlparse output")
+        # base = config['url'].rstrip('/')
+        # path = image_src.lstrip('/')
 
-        image_src = "{base}/{path}".format(base=base, path=path)
-        logging.debug("relative url, New source = {}".format(image_src))
+        # image_src = "{base}/{path}".format(base=base, path=path)
 
+    image_src = "{scheme}://{netloc}/{image_src}".format(
+        scheme=parsed.scheme,
+        netloc=parsed.netloc,
+        image_src=image_src.strip(),
+    )
+    logging.debug("relative url, New source = {}".format(image_src))
+
+
+    print("http://sssscomic.com/comicpages/900.jpg")
+    print(image_src)
     image_local_filename = cache.request_cached_binary(image_src)
     if not image_local_filename:
         logging.error("Something went wrong with: {}".format(image_src))
