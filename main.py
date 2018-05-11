@@ -24,24 +24,24 @@ cache.init(os.path.join(ROOT_DIR, 'cache'))
 os.makedirs(LOGGING_DIR, exist_ok=True)
 
 
-def fetch_comic(config):
-    print("Config: {}".format(name)) # wait, `name` works?!
-    # print(name)
-    # print(config)
+def fetch_comic(config, name):
+    print("Config: {}".format(name))
     html = cache.request_cached_text(config['url'])
     soup = BeautifulSoup(html, 'html5lib')
 
     image_src = grab_attr(soup, config['selectors']['image'], 'src')
     if not image_src:
-        logging.error("Bad url for: {config}".format(config=config))
-        print("Bad url for: {config}".format(config=config))
+        logging.error("Bad selector for: {config}".format(config=config))
+        print("Bad selector for: {config}".format(config=config))
         return {}
 
     if image_src.startswith("//"):
+        # todo: try https, fallback to http
         image_src = "http:" + image_src
 
     # using relative url
     if not urlparse(image_src).scheme:
+        raise Exception("todo: instead of config['url'] base use urlparse output")
         base = config['url'].rstrip('/')
         path = image_src.lstrip('/')
 
@@ -71,7 +71,7 @@ def fetch_comic(config):
 if __name__ == "__main__":
     comics = []
     for name in config.config:
-        comic = fetch_comic(config.config[name])
+        comic = fetch_comic(config.config[name], name)
         if comic:
             comics.append(comic)
 

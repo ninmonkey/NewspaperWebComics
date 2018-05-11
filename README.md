@@ -27,6 +27,8 @@ optional:
 
 first:
 - redownload cached HTML if older than Xdays/Xhours
+- display 'new comic'
+    - read comics will auto-collapse or use lower opacity
 
 - why does image['title'] fail?
     - related to using html5lib ?
@@ -44,6 +46,10 @@ first:
 
 - default selectors if config fails
     "#comic img", "#cc-comic img", "img#comic", "img#cc-comic"
+
+# if dynamic site
+
+- auto-mark comics as read when scrolled to
 
 # bugfix:
 
