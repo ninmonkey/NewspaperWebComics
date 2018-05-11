@@ -67,7 +67,8 @@ def request_cached_binary(request_url):
         r = requests.get(request_url)
         if not r.ok:
             logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason), exc_info=True)
-            raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
+            # raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
+            return None
 
         mime_type = r.headers['content-type']
         ext_type = mimetypes.guess_extension(mime_type) or ''
