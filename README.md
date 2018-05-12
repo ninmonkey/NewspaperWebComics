@@ -25,8 +25,9 @@ optional:
 
 # todo
 
+async request fetch of urls?
+
 first:
-- redownload cached HTML if older than Xdays/Xhours
 - display 'new comic'
     - read comics will auto-collapse or use lower opacity
 

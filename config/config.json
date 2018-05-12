@@ -12,5 +12,201 @@
             "image": "#comic img",
             "comic_title": "#ctitle"
         }
+    },
+    "Penny Arcade": {
+        "url": "https://www.penny-arcade.com/comic",
+        "selectors": {
+            "image": "#comicFrame img",
+            "comic_title": "#comic div div h2"
+        }
+    },
+    "Nerf Now": {
+        "url": "http://www.nerfnow.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Saturday Morning Breakfast Cereal": {
+        "url": "https://www.smbc-comics.com/",
+        "selectors": {
+            "image": "#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Perry Bible Fellowship": {
+        "url": "http://pbfcomics.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": "h1.pbf-comic-title"
+        }
+    },
+    "Buttersafe": {
+        "url": "http://buttersafe.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Sam & Fuzzy": {
+        "url": "http://www.samandfuzzy.com/",
+        "selectors": {
+            "image": "img.comic-image",
+            "comic_title": null
+        }
+    },
+    "Scenes from a multiverse": {
+        "url": "http://amultiverse.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Dinosaur Comics": {
+        "url": "http://www.qwantz.com/",
+        "selectors": {
+            "image": "img.comic",
+            "comic_title": null
+        }
+    },
+    "Red Moon Rising": {
+        "url": "http://www.redmoonrising.org/",
+        "selectors": {
+            "image": "#webcomic img",
+            "comic_title": null
+        }
+    },
+    "Lilith Word": {
+        "url": "http://www.lilithword.com/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Mages of Mystralia": {
+        "url": "http://comic.magesofmystralia.com/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Dawn off Time": {
+        "url": "http://dawnoftimecomics.com/",
+        "selectors": {
+            "image": "#strip img",
+            "comic_title": null
+        }
+    },
+    "Clockwork Comic": {
+        "url": "http://www.clockwork-comic.com/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Peritale": {
+        "url": "http://www.peritale.com/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Blackgrass": {
+        "url": "http://www.blackgrasscomic.com/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "The Meek": {
+        "url": "http://www.meekcomic.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Channelate": {
+        "url": "http://www.channelate.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Atomic Robo": {
+        "url": "http://www.atomic-robo.com/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Awaken": {
+        "url": "http://awakencomic.com/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Dumbing of Age": {
+        "url": "http://www.dumbingofage.com/",
+        "selectors": {
+            "image": "#comic-1 img",
+            "comic_title": null
+        }
+    },
+    "Girls with Slingshots": {
+        "url": "https://girlswithslingshots.com/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Gunnerkrigg": {
+        "url": "http://gunnerkrigg.com/",
+        "selectors": {
+            "image": "img.comic_image",
+            "comic_title": null
+        }
+    },
+    "Goblins Comic": {
+        "url": "http://www.goblinscomic.org/",
+        "selectors": {
+            "image": "img#cc-comic",
+            "comic_title": null
+        }
+    },
+    "O Human Star Age": {
+        "url": "http://ohumanstar.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Guilded Age": {
+        "url": "http://guildedage.net/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Questionable Content": {
+        "url": "http://questionablecontent.net/",
+        "selectors": {
+            "image": "#comicnav + img",
+            "comic_title": null
+        }
+    },
+    "Were Geek": {
+        "url": "http://www.weregeek.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
+    },
+    "Shark Splode": {
+        "url": "http://sharksplode.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": null
+        }
     }
 }

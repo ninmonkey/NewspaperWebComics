@@ -66,6 +66,7 @@ def fetch_comic(config, name):
         'comic_url': config['url'],
         'image_alt': image_alt,
         'image_src': image_local_filename,
+        'unread': cache.cache[image_src_full]['unread'],
     }
 
     return comic
