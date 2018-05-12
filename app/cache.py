@@ -1,11 +1,11 @@
-from datetime import datetime
-import os
+import datetime
 import json
 import logging
 import mimetypes
+import os
 
 import requests
-# 'date_cached': datetime.datetime.now(),
+
 # todo: check if html expired, expecially on front page. maybe not on foo.com/comic/<id>
 from app.str_const import(
     STR_DATE_FORMAT_MICROSECONDS,
@@ -15,6 +15,7 @@ from app.str_const import(
 
 cache = {}
 PATH_ROOT = ''
+DEFAULT_EXPIRE_TIME = datetime.timedelta(days=1)
 logging = logging.getLogger(__name__)
 
 
@@ -58,6 +59,9 @@ def request_cached_binary(request_url):
         logging.debug("cached Binary file: {}".format(request_url))
         filename = cache[request_url]['local_file']
         filepath = os.path.join(PATH_ROOT, filename)
+        cache[request_url]['unread'] = True
+
+        cache_write_config(cache)
         return 'cache/' + filename
     else:
         logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
@@ -74,18 +78,18 @@ def request_cached_binary(request_url):
         ext_type = mimetypes.guess_extension(mime_type) or ''
 
         filename = "{datetime}{ext}".format(
-            datetime=datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
+            datetime=datetime.datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
             ext=ext_type)
         filepath = os.path.join(PATH_ROOT, filename)
         with open(filepath, mode='wb') as f:
             f.write(r.content)
 
         cache[request_url] = {
-            'local_file': filename,
-            'download_date': datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
-            # 'content-type': '?binary?',
             'content-type': mime_type,
+            'download_date': datetime.datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
             'extension': ext_type,
+            'local_file': filename,
+            'unread': True,
         }
 
     cache_write_config(cache)
@@ -103,6 +107,9 @@ def request_cached_text(request_url):
 
         with open(filepath, mode='r', encoding='utf8') as f:
             return f.read()
+
+        cache[request_url]['unread'] = True
+        cache_write_config(cache)
     else:
         logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
         # todo: try/catch for badname/timeouts
@@ -116,7 +123,7 @@ def request_cached_text(request_url):
         ext_type = mimetypes.guess_extension(mime_type) or ''
 
         filename = "{datetime}{ext}".format(
-            datetime=datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
+            datetime=datetime.datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
             ext=ext_type)
         filepath = os.path.join(PATH_ROOT, filename)
         with open(filepath, mode='w', encoding='utf-8') as f:
@@ -124,9 +131,10 @@ def request_cached_text(request_url):
 
         cache[request_url] = {
             'local_file': filename,
-            'download_date': datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
+            'download_date': datetime.datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
             'content-type': mime_type,
             'extension': ext_type,
+            'unread': True,
         }
 
     cache_write_config(cache)
