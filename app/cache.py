@@ -21,20 +21,21 @@ logging = logging.getLogger(__name__)
 
 def init(path_cache):
     global PATH_ROOT
+    global cache
 
     PATH_ROOT = path_cache
     os.makedirs(PATH_ROOT, exist_ok=True)
     logging.debug("Cache: {}".format(path_cache))
-    cache = cache_read_config()
+    cache = read_config()
 
 
-def cache_read_config():
+def read_config():
     global cache
-    # todo: create if not existing
+
     json_path = os.path.join(PATH_ROOT, 'cache.json')
 
     if not os.path.exists(json_path):
-        cache_write_config(cache)
+        write_config()
 
     try:
         with open(json_path, mode='r', encoding='utf-8') as f:
@@ -45,7 +46,7 @@ def cache_read_config():
     return cache
 
 
-def cache_write_config(cache):
+def write_config():
     json_path = os.path.join(PATH_ROOT, 'cache.json')
     with open(json_path, mode='w', encoding='utf-8') as f:
         json.dump(cache, f, indent=4, sort_keys=True)
@@ -59,9 +60,8 @@ def request_cached_binary(request_url):
         logging.debug("cached Binary file: {}".format(request_url))
         filename = cache[request_url]['local_file']
         filepath = os.path.join(PATH_ROOT, filename)
-        cache[request_url]['unread'] = True
+        cache[request_url]['unread'] = False
 
-        cache_write_config(cache)
         return 'cache/' + filename
     else:
         logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
@@ -92,7 +92,6 @@ def request_cached_binary(request_url):
             'unread': True,
         }
 
-    cache_write_config(cache)
     return 'cache/' + filename
 
 
@@ -108,12 +107,9 @@ def request_cached_text(request_url):
         with open(filepath, mode='r', encoding='utf8') as f:
             return f.read()
 
-        cache[request_url]['unread'] = True
-        cache_write_config(cache)
+        cache[request_url]['unread'] = False
     else:
         logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
-        # todo: try/catch for badname/timeouts
-            # log, then continue
         r = requests.get(request_url)
         if not r.ok:
             logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason), exc_info=True)
@@ -137,5 +133,4 @@ def request_cached_text(request_url):
             'unread': True,
         }
 
-    cache_write_config(cache)
     return r.text

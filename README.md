@@ -26,7 +26,6 @@ optional:
 # todo
 
 first:
-- only write cache once
 - redownload cached HTML if older than Xdays/Xhours
 - display 'new comic'
     - read comics will auto-collapse or use lower opacity

@@ -84,4 +84,6 @@ if __name__ == "__main__":
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html)
 
+    cache.write_config()
+
     print("Done.")

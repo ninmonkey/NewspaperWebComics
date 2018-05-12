@@ -14,6 +14,9 @@
 
 {%- for comic in comics -%}
     <h1>
+        {%- if comic['unread'] -%}
+        <span class='new'>New</span>
+        {%- endif -%}
         <a href="{{ comic['comic_url']|e }}">{{ comic['comic_name']|e }}:</a>
         {{ comic['comic_title']|e }}
     </h1>
