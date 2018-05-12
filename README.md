@@ -44,17 +44,16 @@ first:
 - use HTTPS in `fetch_comic()`, fallback to HTTP
 - utilize `srcset` ?
 
+- auto-free space in /cache/ as needed
+
 - default selectors if config fails
     "#comic img", "#cc-comic img", "img#comic", "img#cc-comic"
 
+- 
 # if dynamic site
 
 - auto-mark comics as read when scrolled to
 
 # bugfix:
 
-    - Bad url for: 'http://sssscomic.com/comic.php' which doesn't work with
-        /comic.php/image.png
-
-- should I keep stripping `//` prefixes?
-    - eg: //imgs.xkcd.com/comics/thermostat.png
+    - DEBUG:root:relative url, New source = https://imgs.xkcd.com//comics/safetysat.png

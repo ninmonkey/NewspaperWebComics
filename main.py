@@ -20,7 +20,7 @@ logging.getLogger("chardet").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.basicConfig(
     handlers=[logging.FileHandler(os.path.join(LOGGING_DIR, 'main.log'), 'w', 'utf-8')],
-    level=logging.WARNING)
+    level=logging.DEBUG)
 
 cache.init(os.path.join(ROOT_DIR, 'cache'))
 
@@ -85,5 +85,7 @@ if __name__ == "__main__":
         f.write(html)
 
     cache.write_config()
+
+    print(comics)
 
     print("Done.")
