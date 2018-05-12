@@ -86,6 +86,5 @@ if __name__ == "__main__":
 
     cache.write_config()
 
-    print(comics)
-
+    # print(comics)
     print("Done.")

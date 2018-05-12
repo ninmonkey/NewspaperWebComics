@@ -16,6 +16,7 @@ from app.str_const import(
 cache = {}
 PATH_CACHE = ''
 DEFAULT_EXPIRE_HTML = datetime.timedelta(days=1)
+DEFAULT_EXPIRE_BINARY = datetime.timedelta(days=15)
 logging = logging.getLogger(__name__)
 
 
@@ -91,67 +92,35 @@ def remove_cached_url(request_url):
         del cache[request_url]
 
 
-def request_cached_binary(request_url):
-    # requests.get() but cached, binary, returns: filename
+def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
+     # requests.get() but cached, and returns: request.text else file name
     global cache
 
-    if request_url in cache:
-        logging.debug("cached Binary file: {}".format(request_url))
-        filename = cache[request_url]['local_file']
-        filepath = os.path.join(PATH_CACHE, filename)
-        cache[request_url]['unread'] = False
+    if not cache_is_expired(request_url, expire_time):
+        if text:
+            logging.debug("cached Text file: {}".format(request_url))
+            file = cache[request_url]['local_file']
+            filepath = os.path.join(PATH_CACHE, file)
+            cache[request_url]['unread'] = False
 
-        return 'cache/' + filename
-    else:
-        logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
-        print("Requesting new Binary file! {}".format(request_url))
-        # todo: try/catch for badname/timeouts
-            # log, then continue
-        r = requests.get(request_url)
-        if not r.ok:
-            logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason), exc_info=True)
-            # raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
-            return None
+            with open(filepath, mode='r', encoding='utf8') as f:
+                return f.read()
+        else:
+            logging.debug("cached Binary file: {}".format(request_url))
+            file = cache[request_url]['local_file']
+            cache[request_url]['unread'] = False
 
-        mime_type = r.headers['content-type']
-        ext_type = mimetypes.guess_extension(mime_type) or ''
-
-        filename = "{datetime}{ext}".format(
-            datetime=datetime.datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
-            ext=ext_type)
-        filepath = os.path.join(PATH_CACHE, filename)
-        with open(filepath, mode='wb') as f:
-            f.write(r.content)
-
-        cache[request_url] = {
-            'content-type': mime_type,
-            'download_date': datetime.datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
-            'extension': ext_type,
-            'local_file': filename,
-            'unread': True,
-        }
-
-    return 'cache/' + filename
-
-
-def request_cached_text(request_url):
-    # requests.get() but cached, and returns: request text
-    global cache
-
-    # if request_url in cache and not cache_is_expired(request_url):
-    if not cache_is_expired(request_url, DEFAULT_EXPIRE_HTML):
-        logging.debug("cached Text file: {}".format(request_url))
-        file = cache[request_url]['local_file']
-        filepath = os.path.join(PATH_CACHE, file)
-
-        with open(filepath, mode='r', encoding='utf8') as f:
-            return f.read()
-
-        cache[request_url]['unread'] = False
+            return os.path.join('cache', file)
     else:
         remove_cached_url(request_url)
 
-        logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
+        if text:
+            logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
+            print("Requesting new Text file! {}".format(request_url))
+        else:
+            logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
+            print("Requesting new Binary file! {}".format(request_url))
+
         r = requests.get(request_url)
         if not r.ok:
             logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason), exc_info=True)
@@ -160,19 +129,37 @@ def request_cached_text(request_url):
         mime_type = r.headers['content-type']
         ext_type = mimetypes.guess_extension(mime_type) or ''
 
-        filename = "{datetime}{ext}".format(
+        file = "{datetime}{ext}".format(
             datetime=datetime.datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
             ext=ext_type)
-        filepath = os.path.join(PATH_CACHE, filename)
-        with open(filepath, mode='w', encoding='utf-8') as f:
-            f.write(r.text)
+        path = os.path.join(PATH_CACHE, file)
+
+        if text:
+            with open(path, mode='w', encoding='utf-8') as f:
+                f.write(r.text)
+        else:
+            with open(path, mode='wb') as f:
+                f.write(r.content)
 
         cache[request_url] = {
-            'local_file': filename,
+            'local_file': file,
             'download_date': datetime.datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
             'content-type': mime_type,
             'extension': ext_type,
             'unread': True,
         }
+    if text:
+        return r.text
+    else:
+        return os.path.join('cache', file)
 
-    return r.text
+
+def request_cached_binary(request_url):
+    # requests.get() but cached, binary, returns: filename
+    return _request_cached(request_url, text=False, expire_time=DEFAULT_EXPIRE_BINARY)
+
+
+def request_cached_text(request_url):
+    # requests.get() but cached, and returns: request text
+    return _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML)
+
