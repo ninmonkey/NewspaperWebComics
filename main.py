@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 import logging
 import os
 import random
@@ -14,6 +14,7 @@ from app.app_locals import grab_attr, grab_text
 ALWAYS_RANDOM = False
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGGING_DIR = os.path.join(ROOT_DIR, 'logs')
+os.makedirs(LOGGING_DIR, exist_ok=True)
 
 logging.getLogger("chardet").setLevel(logging.WARNING)
 logging.basicConfig(
@@ -21,7 +22,6 @@ logging.basicConfig(
     level=logging.DEBUG)
 
 cache.init(os.path.join(ROOT_DIR, 'cache'))
-os.makedirs(LOGGING_DIR, exist_ok=True)
 
 
 def fetch_comic(config, name):
@@ -35,13 +35,38 @@ def fetch_comic(config, name):
         print("Bad selector for: {config}".format(config=config))
         return {}
 
-    parsed = urlparse(config['url'])
-    parsed_src = urlparse(image_src)
 
+    parsed_html = urlparse(config['url'])
+    parsed_image = urlparse(image_src)
 
+    # print("_html: ", parsed_html)
+    # print("_image: ", parsed_image)
 
+    """
+    >>> par.geturl()
+    'imgs.xkcd.com/comics/safetysat.png'
+    >>> par
+    ParseResult(scheme='', netloc='', path='imgs.xkcd.com/comics/safetysat.png', params='', query='', fragment='')
+    """
 
-    if image_src.startswith("//"):
+    # relative urls
+    # if image_src.startswith('/'):
+        # image_src = image_src.strip('//')
+    args = {
+        'scheme': parsed_image.scheme or parsed_html.scheme or 'http',
+        'netloc': parsed_image.netloc or parsed_html.netloc,
+        'path': parsed_image.path,
+        'params': parsed_image.params,
+        'query': parsed_image.query,
+        'fragment': parsed_image.fragment,
+    }
+    # image_src = urlunparse(**args)
+    image_src_full = '{scheme}://{netloc}/{path}'.format(**args)
+    print("new: ", image_src_full)
+
+    return {}
+
+    if image_src.startswith('//'):
         # todo: try https, fallback to http
         image_src = "{scheme}:{image_src}".format(
             scheme=parsed.scheme,
