@@ -13,20 +13,20 @@
 
 
 {%- for comic_group in comics -%}
-{%- for comic in comic_group -%}
-    <h1>
-        {%- if comic['unread'] -%}
-        <span class='new'>New</span>
+    {%- for comic in comic_group -%}
+        <h1>
+            {%- if comic['unread'] -%}
+            <span class='new'>New</span>
+            {%- endif -%}
+            <a href="{{ comic['comic_url']|e }}">{{ comic['comic_name']|e }}:</a>
+            {{ comic['comic_title']|e }}
+        </h1>
+        {% if comic['comic_class'] %}
+            <img class="{{ comic['comic_class']|e }}" src="{{ comic['image_src']|e }}">
+        {%- else -%}
+            <img src="{{ comic['image_src']|e }}">
         {%- endif -%}
-        <a href="{{ comic['comic_url']|e }}">{{ comic['comic_name']|e }}:</a>
-        {{ comic['comic_title']|e }}
-    </h1>
-    {% if comic['comic_class'] %}
-        <img class="{{ comic['comic_class']|e }}" src="{{ comic['image_src']|e }}">
-    {%- else -%}
-        <img src="{{ comic['image_src']|e }}">
-    {%- endif -%}
-{%- endfor -%}
+    {%- endfor -%}
 {%- endfor -%}
 
 {% endblock body %}

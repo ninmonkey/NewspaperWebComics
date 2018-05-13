@@ -8,7 +8,4 @@ env = Environment(
 
 def render(comics):
     template = env.get_template('main.jinja2')
-    for group in comics:
-        print("1")
-        print(group)
     return template.render(comics=comics)

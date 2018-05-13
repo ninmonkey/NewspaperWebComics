@@ -39,7 +39,6 @@ def get_full_url(url_html, url_image):
         # 'query': parsed_image.query,
         # 'fragment': parsed_image.fragment,
     )
-    print("full=", image_src_full)
     return image_src_full
 
 def fetch_comics_multiple(config, name, count=1):
