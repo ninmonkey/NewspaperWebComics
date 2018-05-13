@@ -47,7 +47,6 @@ def fetch_comics_multiple(config, name, count=1):
     print("Config: {}".format(name))
     comic_list = []
     next_url = config['url']
-    # prev_html_url = None
 
     for i in range(count):
         if not next_url:
@@ -56,9 +55,6 @@ def fetch_comics_multiple(config, name, count=1):
             continue
 
         next_url = get_full_url(config['url'], next_url)
-
-        print("html_this = ", next_url)
-        print("html_this = ", config['url'])
         html = cache.request_cached_text(next_url)
         soup = BeautifulSoup(html, 'html5lib')
         next_url = grab_attr(soup, config['selectors']['prev'], 'href')
@@ -69,14 +65,11 @@ def fetch_comics_multiple(config, name, count=1):
             print("Bad selector for: {config}".format(config=config))
             continue
 
-        print('url', next_url)
-        print('img', image_src)
         image_src_full = get_full_url(config['url'], image_src)
-        print('imgfull = ', image_src_full)
 
         logging.debug("relative url, New source = {}".format(image_src_full))
         image_local_filename = cache.request_cached_binary(image_src_full)
-        print("local=", image_local_filename)
+
         if not image_local_filename:
             logging.error("Something went wrong with: {}".format(image_src_full))
             raise Exception("Something went wrong with image_local_filename. src = {}".format(image_src_full))
