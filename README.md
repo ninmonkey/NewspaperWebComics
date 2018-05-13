@@ -58,7 +58,10 @@ first:
 - default selectors if config fails
     "#comic img", "#cc-comic img", "img#comic", "img#cc-comic"
 
-- 
+- cleanup
+    - images not in /cache.json will be deleted (eg. config deleting of comic)
+
+
 # if dynamic site
 
 - auto-mark comics as read when scrolled to

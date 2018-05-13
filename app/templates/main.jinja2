@@ -12,7 +12,8 @@
 {% block body %}
 
 
-{%- for comic in comics -%}
+{%- for comic_group in comics -%}
+{%- for comic in comic_group -%}
     <h1>
         {%- if comic['unread'] -%}
         <span class='new'>New</span>
@@ -25,6 +26,7 @@
     {%- else -%}
         <img src="{{ comic['image_src']|e }}">
     {%- endif -%}
+{%- endfor -%}
 {%- endfor -%}
 
 {% endblock body %}
