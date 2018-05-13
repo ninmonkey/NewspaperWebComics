@@ -25,7 +25,15 @@ optional:
 
 # todo
 
-async request fetch of urls?
+- async request fetch of urls?
+- implement next/prev without webserver. pre-cache enough for use.
+
+javascript:
+    - can toggle previous/next comic in series.
+    - toggle images as read
+    - hide read images next time?
+    - grab default of last X comics of one source
+    - add/remove sources
 
 first:
 - display 'new comic'
