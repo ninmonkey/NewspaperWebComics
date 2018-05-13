@@ -96,6 +96,8 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
      # requests.get() but cached, and returns: request.text else file name
     global cache
 
+    print("request_cache: ", request_url)
+
     if not cache_is_expired(request_url, expire_time):
         if text:
             logging.debug("cached Text file: {}".format(request_url))
@@ -121,6 +123,7 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
             logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
             print("Requesting new Binary file! {}".format(request_url))
 
+        print("r = ", request_url)
         r = requests.get(request_url)
         if not r.ok:
             logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason), exc_info=True)
