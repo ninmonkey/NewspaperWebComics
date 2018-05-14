@@ -25,12 +25,37 @@ optional:
     class: name of class in CSS for special markup on a single comic
     prev: CSS selector for url to prev page
 
-# first
+# bugfix
 
-Debug. Fix
+    0] Stand Still. Stay Silent:, dinoaur comics, Gunnerkrigg, Shark Splode
+
+    1]  nth-of-type says it works but it doesn't seem to 
+    .navbar a:nth-of-type(2)      
+    
+    repl says
+        
+        >>> soup.select(".navbar a:nth-of-type(2)")[0].get('href')
+        'index.php?id=304'
+
+       "http://dawnoftimecomics.com/": [
+        {
+            "comic_title": "Dawn of Time Strip #305 (July 4, 2011)",
+            "image_src": "cache\\2018 05 14 - 16 41 29 519218.png"
+        },
+        {
+            "comic_title": "Dawn of Time Strip #305 (July 4, 2011)",
+            "image_src": "cache\\2018 05 14 - 16 41 29 519218.png"
+        },
+        {
+            "comic_title": "Dawn of Time Strip #305 (July 4, 2011)",
+            "image_src": "cache\\2018 05 14 - 16 41 29 519218.png"
+
 
 # todo
 
+- threading
+    - different domains download at same time.
+    
 - module js pattern
 - de-duplicate code in js init handlers
 - async request fetch of urls?
@@ -49,7 +74,10 @@ Debug. Fix
 - utilize `srcset` ?
 
 - default selectors if config fails
-    "#comic img", "#cc-comic img", "img#comic", "img#cc-comic"
+    - images:
+        "#comic img", "#cc-comic img", "img#comic", "img#cc-comic"
+    - prev:
+        "a[rel='prev']", "a.navi-prev", "a.prev"
 
 # if dynamic site
 
