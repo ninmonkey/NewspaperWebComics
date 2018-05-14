@@ -15,32 +15,32 @@
 //     "xkcd.com": 0,
 // };
 function next(name) {
-    offsets[name] += 1;
-    if (offsets[name] < 0) {
-        offsets[name] = 0;
+    js_offsets[name] += 1;
+    if (js_offsets[name] < 0) {
+        js_offsets[name] = 0;
     }
-    if (offsets[name] >= comics[name].length) {
+    if (js_offsets[name] >= js_comics[name].length) {
         console.log('too far dude');
-        offsets[name] = comics[name].length - 1;
+        js_offsets[name] = js_comics[name].length - 1;
     }
-    console.log("i=", offsets[name]);
-    off = offsets[name];
-    return {
-        title: comics[name][off].title
-    };
+    console.log("i=", js_offsets[name]);
+    return js_offsets[name];
+    // return {
+    //     title: js_comics[name][off].title
+    // };
 }
 
 function prev(name) {
-    off = offsets[name];
+    off = js_offsets[name];
     off -= 1;
 
-    if (offsets[name] <= 0) {
-        offsets[name] = 0;
+    if (js_offsets[name] <= 0) {
+        js_offsets[name] = 0;
     }
-    console.log("i=", offsets[name]);
+    console.log("i=", js_offsets[name]);
 
     return {
-        title: comics[name][off].title
+        title: js_comics[name][off].title
     };
 }
 
@@ -69,10 +69,11 @@ $( document ).ready(function() {
         .find(".comicTitle");
 
       // let group_url = $title.attr('href');
-      let new_title = js_comics[group_url][1]['comic_title'];
+      let i = next(group_url);
+      let new_title = js_comics[group_url][i]['comic_title'];
       $title.html(new_title);
 
-      console.log(group_url, 1, new_title);
+      console.log(group_url, i, new_title);
       // console.log(title);
     });
   });

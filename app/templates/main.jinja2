@@ -16,6 +16,7 @@ js_comics = {{ js_vars['js_comics'] }}
         background-color: lightblue;
         border: 2px solid darkblue;
         margin: 2px 10px;
+        padding: 5px 10px;
         width: 200px;
     }
     </style>
@@ -35,18 +36,17 @@ js_comics = {{ js_vars['js_comics'] }}
                 <span class='title'>Title</span>
                 {%- endif -%} -->
                 <a class="comicUrl" href="{{ comic['comic_url']|e }}">
-                    {{ comic['comic_name']|e }}:
-                </a>
+                    {{ comic['comic_name']|e }}:</a>
                 <span class='comicTitle'>{{ comic['comic_title']|e }}</span>
             </h1>
+            <span class="prevButton"> ← prev</span>
+            <span class="nextButton">next → </span>
+            <br>
             {% if comic['comic_class'] %}
                 <img class="comicImage {{ comic['comic_class']|e }}" src="{{ comic['image_src']|e }}">
             {%- else -%}
                 <img class="comicImage" src="{{ comic['image_src']|e }}">
             {%- endif -%}
-            <br>
-            <div class="prevButton"><- prev</div>
-            <div class="nextButton"><- next</div>
 
         </div>
     {% endif %}
