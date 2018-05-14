@@ -30,13 +30,25 @@ def get_full_url(url_html, url_image):
     if not url_html or not url_image:
         raise ValueError("Requires both html and img urls!")
 
+    if url_html == url_image:
+        return url_html
+
+    url_html = url_html.rstrip('/')
     parsed_html = urlparse(url_html)
     parsed_image = urlparse(url_image)
 
-    image_src_full = '{scheme}://{netloc}{path}'.format(
+    # netloc = parsed_image.netloc.rstrip('/') or parsed_html.netloc.rstrip('/'),
+    # path = (parsed_image.path.strip()).lstrip('/'),
+
+    print("_full_url")
+    print(url_html)
+    print(url_html)
+    print(url_image)
+
+    image_src_full = '{scheme}://{netloc}/{path}'.format(
         scheme=parsed_image.scheme or parsed_html.scheme or 'http',
-        netloc=parsed_image.netloc or parsed_html.netloc,
-        path=parsed_image.path.strip(),
+        netloc=(parsed_image.netloc or parsed_html.netloc).rstrip('/'),
+        path=parsed_image.path.strip().lstrip('/'),
         # 'params': parsed_image.params,
         # 'query': parsed_image.query,
         # 'fragment': parsed_image.fragment,
@@ -53,11 +65,13 @@ def fetch_comics_multiple(config, name, count=1):
 
     for i in range(count):
         if not next_url:
-            logging.error("Bad selector for next_url for count {0} of {1}".format(i, name))
+            # logging.error("Bad selector for next_url for count {0} of {1}".format(i, name))
             # raise Exception("No next_Url for count {0} of {1}".format(i, name))
             continue
 
+        print("next_url1 {}".format(next_url))
         next_url = get_full_url(config['url'], next_url)
+        print("next_url2 {}".format(next_url))
         html = cache.request_cached_text(next_url)
         soup = BeautifulSoup(html, 'html5lib')
         if config['selectors'].get('prev'):
@@ -106,6 +120,8 @@ if __name__ == "__main__":
     for name in config.config:
         comic_list = fetch_comics_multiple(config.config[name], name, 3)
         if comic_list:
+            print("==cache")
+            print(cache.ALL_URLS)
             comics.append(comic_list)
 
     if ALWAYS_RANDOM:
@@ -116,6 +132,8 @@ if __name__ == "__main__":
         f.write(html)
 
     cache.write_config()
+
+
 
     # print(comics)
     print("Done.")

@@ -21,6 +21,8 @@ DEFAULT_EXPIRE_HTML = datetime.timedelta(days=1)
 DEFAULT_EXPIRE_BINARY = datetime.timedelta(days=15)
 logging = logging.getLogger(__name__)
 
+ALL_URLS = []
+
 
 def init(path_cache, delay=None):
     global PATH_CACHE
@@ -100,6 +102,7 @@ def remove_cached_url(request_url):
 def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
      # requests.get() but cached, and returns: request.text else file name
     global cache
+    global ALL_URLS
 
     if not cache_is_expired(request_url, expire_time):
         if text:
@@ -118,6 +121,7 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
             return os.path.join('cache', file)
     else:
         remove_cached_url(request_url)
+        ALL_URLS.append(request_url)
 
         if text:
             logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))

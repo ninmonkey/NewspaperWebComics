@@ -10,7 +10,8 @@ if this app breaks, edit config.json with new CSS selectors
         "class": null,
         "selectors": {
             "image": "#comic img",
-            "comic_title": "#ctitle"
+            "comic_title": "#ctitle",
+            "prev": "a[rel='prev']"
         }
     }
 
@@ -22,6 +23,7 @@ optional:
 
     comic_title: CSS selector to grab comic title element. Fallback to `image.alt`
     class: name of class in CSS for special markup on a single comic
+    prev: CSS selector for url to prev page
 
 # first
 

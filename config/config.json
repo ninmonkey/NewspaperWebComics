@@ -1,13 +1,4 @@
 {
-    "xkcd": {
-        "url": "https://xkcd.com/",
-        "selectors": {
-            "image": "#comic img",
-            "comic_title": "#ctitle",
-            "prev": "a[rel='prev']"
-
-        }
-    },
     "Nerf Now": {
         "url": "http://www.nerfnow.com/",
         "selectors": {
@@ -16,10 +7,10 @@
             "prev": "#nav_previous a"
         }
     },
-    "Saturday Morning Breakfast Cereal": {
-        "url": "https://www.smbc-comics.com/",
+    "Dawn off Time": {
+        "url": "http://dawnoftimecomics.com/index.php",
         "selectors": {
-            "image": "#cc-comic",
+            "image": "#strip img",
             "comic_title": null
         }
     }
