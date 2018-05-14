@@ -51,8 +51,45 @@ function init() {
 
 $( document ).ready(function() {
 
+  $('.prevButton').each(function (index, value) {
+    let self = this;
+    $(self).on("click", function() {
+      // $this()
+      // comicTitle
+      console.log('selfie');
+      var $title = $(self)
+        .parent()
+        .find(".comicUrl");
+
+      console.log($title.attr('href'));
+      // console.log(title);
+    });
+  });
+
+  return;
+
+
+
+  $(".prev").on("click", function() {
+    console.log('prev');
+    //$("#title").html(comics['xkcd.com'][1].title);
+    // ret = next('xkcd.com');
+    // $("#title").html(ret.title);
+  });
+
     return;
     $("#title").html(comics['xkcd.com'][0].title);
+
+    $("#prev").on("click", function() {
+        console.log('prev');
+        //$("#title").html(comics['xkcd.com'][1].title);
+        // ret = next('xkcd.com');
+        // $("#title").html(ret.title);
+    });
+
+
+
+
 
     $("#image").on("click", function() {
         console.log('click');
