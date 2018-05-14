@@ -25,6 +25,7 @@ optional:
 
 # todo
 
+- module js pattern
 - early quit when `next_url` fails
 - async request fetch of urls?
 - implement next/prev without webserver. pre-cache enough for use.

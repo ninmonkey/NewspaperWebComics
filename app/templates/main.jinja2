@@ -1,8 +1,11 @@
 <!DOCTYPE html><html>
 
 <head>
+    <meta charset="utf-8">
     <title>News Web Comics</title>
     <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="static/js/comic_changer.js"></script>
     <script>
 js_offsets = {{ js_vars['js_offsets'] }}
 js_comics = {{ js_vars['js_comics'] }}
@@ -17,18 +20,28 @@ js_comics = {{ js_vars['js_comics'] }}
 
 {%- for comic_group in comics -%}
     {%- for comic in comic_group -%}
-        <h1>
-            {%- if comic['unread'] -%}
-            <span class='new'>New</span>
+    {% if loop.first %}
+        <div class="comicContainer">
+            <h1>
+                <!-- {%- if comic['unread'] -%}
+                <span class='title'>Title</span>
+                {%- endif -%} -->
+                <a class="comicUrl" href="{{ comic['comic_url']|e }}">
+                    {{ comic['comic_name']|e }}:
+                </a>
+                <span class='comicTitle'>{{ comic['comic_title']|e }}</span>
+            </h1>
+            {% if comic['comic_class'] %}
+                <img class="comicImage {{ comic['comic_class']|e }}" src="{{ comic['image_src']|e }}">
+            {%- else -%}
+                <img class="comicImage" src="{{ comic['image_src']|e }}">
             {%- endif -%}
-            <a href="{{ comic['comic_url']|e }}">{{ comic['comic_name']|e }}:</a>
-            {{ comic['comic_title']|e }}
-        </h1>
-        {% if comic['comic_class'] %}
-            <img class="{{ comic['comic_class']|e }}" src="{{ comic['image_src']|e }}">
-        {%- else -%}
-            <img src="{{ comic['image_src']|e }}">
-        {%- endif -%}
+
+            <br>
+            <a class='prev' href="#"><- prev</a>
+            <a class='next' href="#">next -></a>
+        </div>
+    {% endif %}
     {%- endfor -%}
 {%- endfor -%}
 
