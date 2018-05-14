@@ -13,20 +13,16 @@ def generate_js(comics):
 
     for group in comics:
         group_key = group[0]['comic_url']
-        print(group_key)
         js_offsets[group_key] = 0
         js_comics[group_key] = []
 
         for comic in group:
-            print(comic)
             # js_comics[group_key]
             d = {
                 "comic_title": comic['comic_title'],
                 "image_src": comic['image_src'],
             }
             js_comics[group_key].append(d)
-
-    # print(js_offsets)
 
     return {
         "js_offsets": json.dumps(js_offsets, indent=4, sort_keys=True),

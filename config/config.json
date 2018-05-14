@@ -1,10 +1,39 @@
 {
+    "xkcd": {
+        "url": "https://xkcd.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": "#ctitle",
+            "prev": "a[rel='prev']"
+        }
+    },
+    "Penny Arcade": {
+        "url": "https://www.penny-arcade.com/comic",
+        "selectors": {
+            "image": "#comicFrame img",
+            "comic_title": "#comic div div h2"
+        }
+    },
     "Nerf Now": {
         "url": "http://www.nerfnow.com/",
         "selectors": {
             "image": "#comic img",
             "comic_title": null,
             "prev": "#nav_previous a"
+        }
+    },
+    "Saturday Morning Breakfast Cereal": {
+        "url": "https://www.smbc-comics.com/",
+        "selectors": {
+            "image": "#cc-comic",
+            "comic_title": null
+        }
+    },
+    "Perry Bible Fellowship": {
+        "url": "http://pbfcomics.com/",
+        "selectors": {
+            "image": "#comic img",
+            "comic_title": "h1.pbf-comic-title"
         }
     },
     "Dawn off Time": {
@@ -14,4 +43,5 @@
             "comic_title": null
         }
     }
+
 }

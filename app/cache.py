@@ -4,8 +4,10 @@ import logging
 import mimetypes
 import os
 import time
+import urllib3
 
 import requests
+
 
 # todo: check if html expired, expecially on front page. maybe not on foo.com/comic/<id>
 from app.str_const import(
@@ -130,10 +132,27 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
             logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
             print("Requesting new Binary file! {}".format(request_url))
 
-        r = requests.get(request_url)
-        if not r.ok:
-            logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason), exc_info=True)
-            raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
+        r = None
+        try:
+            r = requests.get(request_url)
+        except (requests.exceptions.ConnectionError,
+                urllib3.exceptions.NewConnectionError,
+                requests.exceptions.ConnectionError,
+            ):
+            logging.error("Error!: Probably a typo in url = {url}".format(url=request_url), exc_info=True)
+
+        if not r:
+            logging.error("Error!: Probably a typo in url = {url}".format(url=request_url))#, exc_info=True)
+            print("Error! No response for url = {}.\n! Check url for typos. !".format(request_url))
+            return None
+            # raise Exception("Error!: Probably a typo in url = {url}".format(url=request_url))
+        if r and not r.ok:
+            logging.error("Error!: code = {code}, reason = {reason}".format(
+                code=r.status_code, reason=r.reason))#, exc_info=True)
+            print("Error: Error Response for url = {url} code = {code}, reason = {reason}".format(
+                url=request_url, code=r.status_code, reason=r.reason))
+            return None
+            # raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
 
         time.sleep(DOWNLOAD_DELAY_TIME)
 
