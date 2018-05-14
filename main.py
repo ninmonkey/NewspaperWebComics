@@ -33,7 +33,6 @@ def get_full_url(url_html, url_image):
     if url_html == url_image:
         return url_html
 
-    url_html = url_html.rstrip('/')
     parsed_html = urlparse(url_html)
     parsed_image = urlparse(url_image)
 
