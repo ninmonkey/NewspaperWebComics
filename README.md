@@ -29,6 +29,7 @@ optional:
 - early quit when `next_url` fails
 - async request fetch of urls?
 - implement next/prev without webserver. pre-cache enough for use.
+- de-duplicate code in js init handlers
 
 javascript:
     - can toggle previous/next comic in series.
