@@ -9,8 +9,16 @@
     <script>
 js_offsets = {{ js_vars['js_offsets'] }}
 js_comics = {{ js_vars['js_comics'] }}
-
     </script>
+
+    <style>
+    .prevButton, .nextButton {
+        background-color: lightblue;
+        border: 2px solid darkblue;
+        margin: 2px 10px;
+        width: 200px;
+    }
+    </style>
 </head>
 <body>
 
@@ -36,10 +44,10 @@ js_comics = {{ js_vars['js_comics'] }}
             {%- else -%}
                 <img class="comicImage" src="{{ comic['image_src']|e }}">
             {%- endif -%}
-
             <br>
-            <a class='prevButton' href="#"><- prev</a>
-            <a class='nextButton' href="#">next -></a>
+            <div class="prevButton"><- prev</div>
+            <div class="nextButton"><- next</div>
+
         </div>
     {% endif %}
     {%- endfor -%}

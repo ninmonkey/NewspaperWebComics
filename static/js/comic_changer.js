@@ -54,14 +54,25 @@ $( document ).ready(function() {
   $('.prevButton').each(function (index, value) {
     let self = this;
     $(self).on("click", function() {
-      // $this()
-      // comicTitle
-      console.log('selfie');
-      var $title = $(self)
-        .parent()
-        .find(".comicUrl");
 
-      console.log($title.attr('href'));
+      let group_url = $(self)
+        .parent()
+        .find(".comicUrl")
+        .attr("href");
+
+      let $image = $(self)
+        .parent()
+        .find(".comicImage");
+
+      let $title = $(self)
+        .parent()
+        .find(".comicTitle");
+
+      // let group_url = $title.attr('href');
+      let new_title = js_comics[group_url][1]['comic_title'];
+      $title.html(new_title);
+
+      console.log(group_url, 1, new_title);
       // console.log(title);
     });
   });
