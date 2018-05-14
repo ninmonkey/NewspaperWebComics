@@ -39,9 +39,11 @@ js_comics = {{ js_vars['js_comics'] }}
                     {{ comic['comic_name']|e }}:</a>
                 <span class='comicTitle'>{{ comic['comic_title']|e }}</span>
             </h1>
-            <span class="prevButton"> ← older</span>
-            <span class="nextButton">newer → </span>
-            <br>
+            {%- if comic['has_prev'] -%}
+                <span class="prevButton"> ← older</span>
+                <span class="nextButton">newer → </span>
+                <br>
+            {%- endif %}
             {% if comic['comic_class'] %}
                 <img class="comicImage {{ comic['comic_class']|e }}" src="{{ comic['image_src']|e }}">
             {%- else -%}

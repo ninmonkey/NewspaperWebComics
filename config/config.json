@@ -15,5 +15,12 @@
             "comic_title": null,
             "prev": "#nav_previous a"
         }
+    },
+    "Saturday Morning Breakfast Cereal": {
+        "url": "https://www.smbc-comics.com/",
+        "selectors": {
+            "image": "#cc-comic",
+            "comic_title": null
+        }
     }
 }

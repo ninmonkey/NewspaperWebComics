@@ -23,6 +23,8 @@ logging.basicConfig(
     level=logging.DEBUG)
 
 cache.init(os.path.join(ROOT_DIR, 'cache'))
+
+
 def get_full_url(url_html, url_image):
     # convert relative urls to fully resolvable url
     if not url_html or not url_image:
@@ -41,11 +43,13 @@ def get_full_url(url_html, url_image):
     )
     return image_src_full
 
+
 def fetch_comics_multiple(config, name, count=1):
     # fetch image and metadata from cache/requests, returns `{}` on failure
     print("Config: {}".format(name))
     comic_list = []
     next_url = config['url']
+    has_prev = False
 
     for i in range(count):
         if not next_url:
@@ -56,7 +60,11 @@ def fetch_comics_multiple(config, name, count=1):
         next_url = get_full_url(config['url'], next_url)
         html = cache.request_cached_text(next_url)
         soup = BeautifulSoup(html, 'html5lib')
-        next_url = grab_attr(soup, config['selectors']['prev'], 'href')
+        if config['selectors'].get('prev'):
+            next_url = grab_attr(soup, config['selectors']['prev'], 'href')
+            has_prev = True
+        else:
+            next_url = None
         image_src = grab_attr(soup, config['selectors']['image'], 'src')
 
         if not image_src:
@@ -86,10 +94,12 @@ def fetch_comics_multiple(config, name, count=1):
             'image_alt': image_alt,
             'image_src': image_local_filename,
             'unread': cache.cache[image_src_full]['unread'],
+            'has_prev': has_prev,
         }
         comic_list.append(comic)
 
     return comic_list
+
 
 if __name__ == "__main__":
     comics = []
