@@ -14,15 +14,19 @@ from app.str_const import(
 
 
 cache = {}
+DOWNLOAD_DELAY_TIME = 0.2    # 0 to disable
 PATH_CACHE = ''
 DEFAULT_EXPIRE_HTML = datetime.timedelta(days=1)
 DEFAULT_EXPIRE_BINARY = datetime.timedelta(days=15)
 logging = logging.getLogger(__name__)
 
 
-def init(path_cache):
+def init(path_cache, delay=None):
     global PATH_CACHE
     global cache
+    global DOWNLOAD_DELAY_TIME
+    if delay:
+        DOWNLOAD_DELAY_TIME = delay
 
     PATH_CACHE = path_cache
     os.makedirs(PATH_CACHE, exist_ok=True)
@@ -125,6 +129,8 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
         if not r.ok:
             logging.error("Error!: code = {}, reason = {}".format(r.status_code, r.reason), exc_info=True)
             raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
+
+        time.sleep(DOWNLOAD_DELAY_TIME)
 
         mime_type = r.headers['content-type']
         ext_type = mimetypes.guess_extension(mime_type) or ''
