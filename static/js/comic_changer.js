@@ -14,57 +14,89 @@ function init() {
     // key uses json to set src
 }
 
+function handle_swap(self, offset) {
+    $(self).on("click", function() {
+      let group_url = $(self)
+        .parent()
+        .find(".comicUrl")
+        .attr("href");
+
+      let $image = $(self)
+        .parent()
+        .find(".comicImage");
+
+      let $title = $(self)
+        .parent()
+        .find(".comicTitle");
+
+      // let group_url = $title.attr('href');
+      let i = next(group_url, offset);
+      let new_title = js_comics[group_url][i]['comic_title'];
+      $title.html(new_title);
+
+      console.log(group_url, i, new_title);
+      // console.log(title);
+    });
+
+}
+
 $(document).ready(function() {
 
-    $('.prevButton').each(function(index, value) {
-        let self = this;
-        $(self).on("click", function() {
+  $('.prevButton').each(function(index, value) {
+      let self = this;
+      $(self).on("click", function() {
 
-            let group_url = $(self)
-                .parent()
-                .find(".comicUrl")
-                .attr("href");
+          let group_url = $(self)
+              .parent()
+              .find(".comicUrl")
+              .attr("href");
 
-            let $image = $(self)
-                .parent()
-                .find(".comicImage");
+          let $image = $(self)
+              .parent()
+              .find(".comicImage");
 
-            let $title = $(self)
-                .parent()
-                .find(".comicTitle");
+          let $title = $(self)
+              .parent()
+              .find(".comicTitle");
 
-            let i = next(group_url, 1);
-            let new_title = js_comics[group_url][i]['comic_title'];
-            let new_src = js_comics[group_url][i]['image_src'];
+          // let group_url = $title.attr('href');
+          let i = next(group_url, 1);
+          let new_title = js_comics[group_url][i]['comic_title'];
+          let new_src = js_comics[group_url][i]['image_src'];
 
-            $title.html(new_title);
-            $image.attr('src', new_src);
-        });
+          $title.html(new_title);
+          $image.attr('src', new_src);
+      });
+  });
+
+  $('.nextButton').each(function(index, value) {
+    let self = this;
+    $(self).on("click", function() {
+
+      let group_url = $(self)
+        .parent()
+        .find(".comicUrl")
+        .attr("href");
+
+      let $image = $(self)
+        .parent()
+        .find(".comicImage");
+
+      let $title = $(self)
+        .parent()
+        .find(".comicTitle");
+
+      // let group_url = $title.attr('href');
+      let i = next(group_url, -1);
+      let new_title = js_comics[group_url][i]['comic_title'];
+      let new_src = js_comics[group_url][i]['image_src'];
+
+      $title.html(new_title);
+      $image.attr('src', new_src);
+
+      console.log(group_url, i, new_title);
+      // console.log(title);
     });
+  });
 
-    $('.nextButton').each(function(index, value) {
-        let self = this;
-        $(self).on("click", function() {
-
-            let group_url = $(self)
-                .parent()
-                .find(".comicUrl")
-                .attr("href");
-
-            let $image = $(self)
-                .parent()
-                .find(".comicImage");
-
-            let $title = $(self)
-                .parent()
-                .find(".comicTitle");
-
-            let i = next(group_url, -1);
-            let new_title = js_comics[group_url][i]['comic_title'];
-            let new_src = js_comics[group_url][i]['image_src'];
-
-            $title.html(new_title);
-            $image.attr('src', new_src);
-        });
-    });
 });
