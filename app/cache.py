@@ -3,6 +3,7 @@ import json
 import logging
 import mimetypes
 import os
+import time
 
 import requests
 
@@ -14,7 +15,7 @@ from app.str_const import(
 
 
 cache = {}
-DOWNLOAD_DELAY_TIME = 0.2    # 0 to disable
+DOWNLOAD_DELAY_TIME = 0.4    # 0 to disable
 PATH_CACHE = ''
 DEFAULT_EXPIRE_HTML = datetime.timedelta(days=1)
 DEFAULT_EXPIRE_BINARY = datetime.timedelta(days=15)
@@ -25,7 +26,7 @@ def init(path_cache, delay=None):
     global PATH_CACHE
     global cache
     global DOWNLOAD_DELAY_TIME
-    if delay:
+    if delay is not None:
         DOWNLOAD_DELAY_TIME = delay
 
     PATH_CACHE = path_cache

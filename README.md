@@ -23,6 +23,10 @@ optional:
     comic_title: CSS selector to grab comic title element. Fallback to `image.alt`
     class: name of class in CSS for special markup on a single comic
 
+# first
+
+Debug. Fix
+
 # todo
 
 - module js pattern
