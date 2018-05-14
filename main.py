@@ -30,6 +30,9 @@ def get_full_url(url_html, url_image):
     if not url_html or not url_image:
         raise ValueError("Requires both html and img urls!")
 
+    if url_html == url_image:
+        return url_html
+
     parsed_html = urlparse(url_html)
     parsed_image = urlparse(url_image)
 
