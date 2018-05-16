@@ -34,16 +34,15 @@ class UrlListThreaded():
         self.urls = []
         self.lock = threading.Lock()
 
-    def add(self, url):
+    def add(self, comic):
         logging.debug("waiting for lock")
         self.lock.acquire()
         try:
             logging.debug("acquire lock")
-            self.urls.append(url)
+            if not comic['comic_url'] in self.urls:
+                self.urls.append(comic['comic_url'])
         finally:
             self.lock.release()
-
-
 
 
 def fetch_comics_multiple(config, name, count=1):
@@ -132,16 +131,19 @@ def main_sync():
 
 def work(url_list, config, name, count):
     comic_list = fetch_comics_multiple(config, name, count)
-    url_list.add(comic_list)
+    # print(comic_list)
+    # for c in comic_list:
+    #     url_list.add(c)
 
 
 def main_threaded():
     url_list = UrlListThreaded()
     threads = []
     comics = []
+    count = 3
 
     for name in config.config:
-        t = threading.Thread(target=work,args=(url_list, config.config[name], name, 3))
+        t = threading.Thread(target=work,args=(url_list, config.config[name], name, count))
         threads.append(t)
         t.start()
 
@@ -169,10 +171,10 @@ def main_threaded():
     # with open('index.html', 'w', encoding='utf-8') as f:
     #     f.write(html)
     #
-    # cache.write_config()
+    cache.write_config()
 
     print(comics)
-    print(url_list.urls)
+    print("url_thread = {}".format(url_list.urls))
     print("Done.")
 
 
@@ -180,11 +182,15 @@ if __name__ == "__main__":
     # import profile
     # profile.run('main(); print()')
     t_start = time.time()
-    main_sync()
-    # main_threaded()
+    # main_sync()
+    main_threaded()
     t_end = time.time()
 
     print("Time: {} seconds".format((t_end - t_start)))
     print("full cache: ~= 0.14-0.19 [len = 4]")
     print("Full empty: ~= 6.8       [len = 4]")
+
+    print("Full empty: ~= 15.37     [len = 4, count=3]")
+    print("Full empty: ~= 5 secs     thread[len = 4, count=3]")
+
     print("Full empty: ~= xxx       thread[len = 4]")

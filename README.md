@@ -53,8 +53,10 @@ optional:
 
 # todo
 
+- screenshot for github
+
 - threading
-    - different domains download at same time.
+    - might need further locks such as config read/write
     
 - module js pattern
 - de-duplicate code in js init handlers
