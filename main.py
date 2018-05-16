@@ -126,14 +126,6 @@ def main_sync():
     # print(ALL_URLS)
 
 
-def work(comics, config, name, count):
-    comic_list = fetch_comics_multiple(config, name, count)
-    comics.add(comic_list)
-    # print(comic_list)
-    # for c in comic_list:
-    #     url_list.add(c)
-
-
 def main_threaded():
     comic_list = ComicListThreaded()
     threads = []
@@ -184,19 +176,84 @@ def main_threaded():
     print("Done. threaded.")
 
 
-if __name__ == "__main__":
+def grab_domains():
+    domains = []
+    count = 1
+    for name in config.config:
+        comic_list = fetch_comics_multiple(config.config[name], name, count)
+        if comic_list:
+            domains.append(comic_list[0]['comic_url'])
+
+    return domains
+
+
+def work(config, name, count):
+    # comic_list = fetch_comics_multiple(config, name, count)
+    # comics.add(comic_list)
+    # print(comic_list)
+    # for c in comic_list:
+    #     url_list.add(c)
+    print("work")
+    pass
+
+
+def main_3():
+    count = 1
+    # domains = grab_domains()
+    threads = []
+    # print("Domains: ", domains)
+    for site in config.config:
+        t = threading.Thread(target=work, args=(config.config[site], site, count))
+        threads.append(t)
+        t.start()
+
+    main_thread = threading.main_thread()
+    for t in threading.enumerate():
+        if t is main_thread:
+            continue
+        logging.debug("joining threads {}".format(t.getName()))
+        t.join()
+
+
+def main_threaded3():
+    comic_list = ComicListThreaded()
+    threads = []
+    # comics = []
+    count = 3
+
+    for name in config.config:
+        t = threading.Thread(target=work,args=(config.config[name], name, count))
+        threads.append(t)
+        t.start()
+
+    main_thread = threading.main_thread()
+    for t in threading.enumerate():
+        if t is main_thread:
+            continue
+
+        logging.debug("Joining {}".format(t.getName()))
+        t.join()
+
+    print("threads joined")
+
+
+def main():
     # import profile
     # profile.run('main(); print()')
     t_start = time.time()
     # main_sync()
-    main_threaded()
+    # main_threaded()
+    main_3()
     t_end = time.time()
-
     print("Time: {} seconds".format((t_end - t_start)))
-    print("full cache: ~= 0.14-0.19 [len = 4]")
-    print("Full empty: ~= 6.8       [len = 4]")
+    # print("full cache: ~= 0.14-0.19 [len = 4]")
+    # print("Full empty: ~= 6.8       [len = 4]")
+    #
+    # print("Full empty: ~= 15.37     [len = 4, count=3]")
+    # print("Full empty: ~= 5 secs     thread[len = 4, count=3]")
+    #
+    # print("Full empty: ~= xxx       thread[len = 4]")
 
-    print("Full empty: ~= 15.37     [len = 4, count=3]")
-    print("Full empty: ~= 5 secs     thread[len = 4, count=3]")
 
-    print("Full empty: ~= xxx       thread[len = 4]")
+if __name__ == "__main__":
+    main()

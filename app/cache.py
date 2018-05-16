@@ -15,7 +15,7 @@ from app.str_const import(
 )
 
 cache = {}
-DOWNLOAD_DELAY_TIME = 0.2    # 0 to disable
+DOWNLOAD_DELAY_TIME = 0.1    # 0 to disable
 PATH_CACHE = ''
 DEFAULT_EXPIRE_HTML = datetime.timedelta(days=1)
 DEFAULT_EXPIRE_BINARY = datetime.timedelta(days=15)
