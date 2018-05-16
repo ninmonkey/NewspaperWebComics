@@ -57,6 +57,7 @@ optional:
 
 - threading
     - might need further locks such as config read/write
+    - need request_cached or anything that touches cache.json
     
 - module js pattern
 - de-duplicate code in js init handlers
