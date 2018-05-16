@@ -15,7 +15,6 @@ from app.str_const import(
     STR_DATE_FORMAT_SECONDS,
 )
 
-
 cache = {}
 DOWNLOAD_DELAY_TIME = 0.4    # 0 to disable
 PATH_CACHE = ''
