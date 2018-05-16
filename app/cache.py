@@ -15,12 +15,12 @@ from app.str_const import(
 )
 
 cache = {}
-DOWNLOAD_DELAY_TIME = 0.4    # 0 to disable
+DOWNLOAD_DELAY_TIME = 0.2    # 0 to disable
 PATH_CACHE = ''
 DEFAULT_EXPIRE_HTML = datetime.timedelta(days=1)
 DEFAULT_EXPIRE_BINARY = datetime.timedelta(days=15)
 logging = logging.getLogger(__name__)
-
+lock_request = threading.Lock()
 
 def init(path_cache, delay=None):
     global PATH_CACHE
@@ -102,81 +102,82 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
      # requests.get() but cached, and returns: request.text else file name
     global cache
 
-    if not cache_is_expired(request_url, expire_time):
-        if text:
-            logging.debug("cached Text file: {}".format(request_url))
-            file = cache[request_url]['local_file']
-            filepath = os.path.join(PATH_CACHE, file)
-            cache[request_url]['unread'] = False
+    with lock_request:
+        if not cache_is_expired(request_url, expire_time):
+            if text:
+                logging.debug("cached Text file: {}".format(request_url))
+                file = cache[request_url]['local_file']
+                filepath = os.path.join(PATH_CACHE, file)
+                cache[request_url]['unread'] = False
 
-            with open(filepath, mode='r', encoding='utf8') as f:
-                return f.read()
+                with open(filepath, mode='r', encoding='utf8') as f:
+                    return f.read()
+            else:
+                logging.debug("cached Binary file: {}".format(request_url))
+                file = cache[request_url]['local_file']
+                cache[request_url]['unread'] = False
+
+                return os.path.join('cache', file)
         else:
-            logging.debug("cached Binary file: {}".format(request_url))
-            file = cache[request_url]['local_file']
-            cache[request_url]['unread'] = False
+            remove_cached_url(request_url)
 
+            if text:
+                logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
+                print("Requesting new Text file! {}".format(request_url))
+            else:
+                logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
+                print("Requesting new Binary file! {}".format(request_url))
+
+            r = None
+            try:
+                r = requests.get(request_url)
+            except (requests.exceptions.ConnectionError,
+                    urllib3.exceptions.NewConnectionError,
+                    requests.exceptions.ConnectionError,
+                ):
+                logging.error("Error!: Probably a typo in url = {url}".format(url=request_url), exc_info=True)
+
+            if not r:
+                logging.error("Error!: Probably a typo in url = {url}".format(url=request_url))#, exc_info=True)
+                print("Error! No response for url = {}.\n! Check url for typos. !".format(request_url))
+                return None
+                # raise Exception("Error!: Probably a typo in url = {url}".format(url=request_url))
+            if r and not r.ok:
+                logging.error("Error!: code = {code}, reason = {reason}".format(
+                    code=r.status_code, reason=r.reason))#, exc_info=True)
+                print("Error: Error Response for url = {url} code = {code}, reason = {reason}".format(
+                    url=request_url, code=r.status_code, reason=r.reason))
+                return None
+                # raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
+
+            time.sleep(DOWNLOAD_DELAY_TIME)
+
+            mime_type = r.headers['content-type']
+            ext_type = mimetypes.guess_extension(mime_type) or ''
+
+            file = "{datetime}{ext}".format(
+                datetime=datetime.datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
+                ext=ext_type)
+            path = os.path.join(PATH_CACHE, file)
+
+            if text:
+                with open(path, mode='w', encoding='utf-8') as f:
+                    f.write(r.text)
+            else:
+                with open(path, mode='wb') as f:
+                    f.write(r.content)
+
+            cache[request_url] = {
+                'local_file': file,
+                'download_date': datetime.datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
+                'content-type': mime_type,
+                'extension': ext_type,
+                'unread': True,
+            }
+        if text:
+            return r.text
+        else:
             return os.path.join('cache', file)
-    else:
-        remove_cached_url(request_url)
-
-        if text:
-            logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
-            print("Requesting new Text file! {}".format(request_url))
-        else:
-            logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
-            print("Requesting new Binary file! {}".format(request_url))
-
-        r = None
-        try:
-            r = requests.get(request_url)
-        except (requests.exceptions.ConnectionError,
-                urllib3.exceptions.NewConnectionError,
-                requests.exceptions.ConnectionError,
-            ):
-            logging.error("Error!: Probably a typo in url = {url}".format(url=request_url), exc_info=True)
-
-        if not r:
-            logging.error("Error!: Probably a typo in url = {url}".format(url=request_url))#, exc_info=True)
-            print("Error! No response for url = {}.\n! Check url for typos. !".format(request_url))
-            return None
-            # raise Exception("Error!: Probably a typo in url = {url}".format(url=request_url))
-        if r and not r.ok:
-            logging.error("Error!: code = {code}, reason = {reason}".format(
-                code=r.status_code, reason=r.reason))#, exc_info=True)
-            print("Error: Error Response for url = {url} code = {code}, reason = {reason}".format(
-                url=request_url, code=r.status_code, reason=r.reason))
-            return None
-            # raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
-
-        time.sleep(DOWNLOAD_DELAY_TIME)
-
-        mime_type = r.headers['content-type']
-        ext_type = mimetypes.guess_extension(mime_type) or ''
-
-        file = "{datetime}{ext}".format(
-            datetime=datetime.datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
-            ext=ext_type)
-        path = os.path.join(PATH_CACHE, file)
-
-        if text:
-            with open(path, mode='w', encoding='utf-8') as f:
-                f.write(r.text)
-        else:
-            with open(path, mode='wb') as f:
-                f.write(r.content)
-
-        cache[request_url] = {
-            'local_file': file,
-            'download_date': datetime.datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
-            'content-type': mime_type,
-            'extension': ext_type,
-            'unread': True,
-        }
-    if text:
-        return r.text
-    else:
-        return os.path.join('cache', file)
 
 
 def request_cached_binary(request_url):

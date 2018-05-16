@@ -29,20 +29,17 @@ logging.basicConfig(
 
 cache.init(os.path.join(ROOT_DIR, 'cache'))
 
-class UrlListThreaded():
+class ComicListThreaded():
     def __init__(self):
         self.urls = []
         self.lock = threading.Lock()
 
     def add(self, comic):
         logging.debug("waiting for lock")
-        self.lock.acquire()
-        try:
+        with self.lock:
             logging.debug("acquire lock")
-            if not comic['comic_url'] in self.urls:
-                self.urls.append(comic['comic_url'])
-        finally:
-            self.lock.release()
+            # if not comic['comic_url'] in self.urls:
+            self.urls.append(comic)
 
 
 def fetch_comics_multiple(config, name, count=1):
@@ -107,10 +104,10 @@ def fetch_comics_multiple(config, name, count=1):
 
 
 def main_sync():
-
     comics = []
+    count = 3
     for name in config.config:
-        comic_list = fetch_comics_multiple(config.config[name], name, 3)
+        comic_list = fetch_comics_multiple(config.config[name], name, count)
         if comic_list:
             # ALL_URLS.append(comic_list[0]['comic_url'])
             comics.append(comic_list)
@@ -125,25 +122,26 @@ def main_sync():
     cache.write_config()
 
     print(comics)
-    print("Done.")
+    print("Done. Mainsync")
     # print(ALL_URLS)
 
 
-def work(url_list, config, name, count):
+def work(comics, config, name, count):
     comic_list = fetch_comics_multiple(config, name, count)
+    comics.add(comic_list)
     # print(comic_list)
     # for c in comic_list:
     #     url_list.add(c)
 
 
 def main_threaded():
-    url_list = UrlListThreaded()
+    comic_list = ComicListThreaded()
     threads = []
-    comics = []
+    # comics = []
     count = 3
 
     for name in config.config:
-        t = threading.Thread(target=work,args=(url_list, config.config[name], name, count))
+        t = threading.Thread(target=work,args=(comic_list, config.config[name], name, count))
         threads.append(t)
         t.start()
 
@@ -160,7 +158,7 @@ def main_threaded():
         #
         # work(config.config[name], name, 1)
         # if comic_list:
-        #     url_list.add(comic_list)
+        #     comic_list.add(comic_list)
 
     # for name in config.config:
     #     comic_list = work(config.config[name], name, 1)
@@ -173,9 +171,17 @@ def main_threaded():
     #
     cache.write_config()
 
-    print(comics)
-    print("url_thread = {}".format(url_list.urls))
-    print("Done.")
+    # if ALWAYS_RANDOM:
+    #     random.shuffle(comics)
+
+    html = view.render(comic_list.urls)
+    with open('index.html', 'w', encoding='utf-8') as f:
+        f.write(html)
+
+
+    # print(comics)
+    print("url_thread = {}".format(comic_list.urls))
+    print("Done. threaded.")
 
 
 if __name__ == "__main__":

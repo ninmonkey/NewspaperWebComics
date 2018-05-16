@@ -54,7 +54,8 @@ optional:
 # todo
 
 - screenshot for github
-
+- write external url test
+rename 'rhead urls' to thread comics
 - threading
     - might need further locks such as config read/write
     
