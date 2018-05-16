@@ -5,7 +5,6 @@ import time
 import threading
 
 from bs4 import BeautifulSoup
-import requests
 
 from app import cache
 from app import config
@@ -43,9 +42,9 @@ class ComicListThreaded():
             #     self.comics.append(c)
                 # self.comics.append(comic['comic_url'])
 
-comic_list = ComicListThreaded()
+comic_list_threaded = ComicListThreaded()
 
-def fetch_comics_multiple(config, name, count=1):
+def fetch_comics_multiple(config, name, count=2):
     # fetch image and metadata from cache/requests, returns `{}` on failure
     print("Config: {}".format(name))
     comic_list = []
@@ -106,12 +105,11 @@ def fetch_comics_multiple(config, name, count=1):
     return comic_list
 
 
-def main_sync():
+def main_sync(count=3):
     comics = []
-    count = 2
     print("main sync")
     for name in config.config:
-        comic_list = fetch_comics_multiple(config.config[name], name, 2)
+        comic_list = fetch_comics_multiple(config.config[name], name, count)
         if comic_list:
             # ALL_URLS.append(comic_list[0]['comic_url'])
             comics.append(comic_list)
@@ -127,23 +125,18 @@ def main_sync():
 
     print(comics)
     print("Done.")
-    # print(ALL_URLS)
 
 
-def work(config, name, count=1):
-    global comic_list
+def work(config, name, count=2):
+    global comic_list_threaded
 
     fetched = fetch_comics_multiple(config, name, count)
-    comic_list.add(fetched)
-    # print(comic_list)
-    # for c in comic_list:
-    #     url_list.add(c)
+    comic_list_threaded.add(fetched)
 
 
 def main_threaded():
     # url_list = UrlListThreaded()
     threads = []
-    comics = []
     count = 2
 
     print("main_threaded")
@@ -161,44 +154,18 @@ def main_threaded():
         logging.debug("Joining {}".format(t.getName()))
         t.join()
 
-    print("threads joined")
-
-        #
-        # work(config.config[name], name, 1)
-        # if comic_list:
-        #     url_list.add(comic_list)
-
-    # for name in config.config:
-    #     comic_list = work(config.config[name], name, 1)
-    #     if comic_list:
-    #         comics.append(comic_list)
-
-
-    # comics = comic_list.comics
-    html = view.render(comic_list.comics)
+    html = view.render(comic_list_threaded.comics)
+    cache.write_config()
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html)
 
-    cache.write_config()
-
-    print("Comics = ", comic_list.comics)
-    # print("url_thread = {}".format(comic_list.comics))
-    print("Done.")
+    print("comics = ", comic_list_threaded.comics)
+    print("Done. Threaded")
 
 
 if __name__ == "__main__":
-    # import profile
-    # profile.run('main(); print()')
     t_start = time.time()
     # main_sync()
     main_threaded()
     t_end = time.time()
-
     print("Time: {} seconds".format((t_end - t_start)))
-    print("full cache: ~= 0.14-0.19 [len = 4]")
-    print("Full empty: ~= 6.8       [len = 4]")
-
-    print("Full empty: ~= 15.37     [len = 4, count=3]")
-    print("Full empty: ~= 5 secs     thread[len = 4, count=3]")
-
-    print("Full empty: ~= xxx       thread[len = 4]")

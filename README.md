@@ -54,14 +54,10 @@ optional:
 # todo
 
 - screenshot for github
-
-- threading
-    - might need further locks such as config read/write
-    - need request_cached or anything that touches cache.json
-    
+- auto-free space in /cache/ as needed
 - module js pattern
-- de-duplicate code in js init handlers
-- async request fetch of urls?
+    - de-duplicate code in js init handlers
+    - unused: handle_swap(), init()
 
 - why does image['title'] fail?
     - allow it to be optional like `alt`
@@ -69,11 +65,12 @@ optional:
     - related to using html5lib ?
     - test on: http://www.qwantz.com/
 
-- horizontal image center
+- horizontal image center?
 - move html output to /html/
 
-- auto-free space in /cache/ as needed
-
+- threading
+    - need request_cached or anything that touches cache.json ?
+    
 - utilize `srcset` ?
 
 - default selectors if config fails
@@ -82,6 +79,7 @@ optional:
     - prev:
         "a[rel='prev']", "a.navi-prev", "a.prev"
 
+    
 # if dynamic site
 
 - display 'new comic'
