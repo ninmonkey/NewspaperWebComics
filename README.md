@@ -53,11 +53,16 @@ optional:
 
 # todo
 
+- timed failure if thread is timing out eg. exception
 - screenshot for github
 - auto-free space in /cache/ as needed
+- optionally: specify order of comics displayed
 - module js pattern
     - de-duplicate code in js init handlers
     - unused: handle_swap(), init()
+
+- generate_js
+    - use more data: title, alt, src, 
 
 - why does image['title'] fail?
     - allow it to be optional like `alt`

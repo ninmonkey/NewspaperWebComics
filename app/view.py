@@ -10,20 +10,16 @@ env = Environment(
 def generate_js(comics):
     js_offsets = {}
     js_comics = {}
-
-    print("gen_js = ", comics)
+    print("gen_js")
+    print(comics)
     for group in comics:
         print("group = ", group)
-        if not group:
-            print("bad group = ", group)
-            continue
 
         group_key = group[0]['comic_url']
         js_offsets[group_key] = 0
         js_comics[group_key] = []
 
         for comic in group:
-            # js_comics[group_key]
             d = {
                 "comic_title": comic['comic_title'],
                 "image_src": comic['image_src'],
@@ -34,6 +30,7 @@ def generate_js(comics):
         "js_offsets": json.dumps(js_offsets, indent=4, sort_keys=True),
         "js_comics": json.dumps(js_comics, indent=4, sort_keys=True)
     }
+
 
 def render(comics):
     template = env.get_template('main.jinja2')
