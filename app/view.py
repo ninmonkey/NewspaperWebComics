@@ -17,14 +17,16 @@ def generate_js(comics):
 
         for comic in group:
             d = {
-                "comic_title": comic['comic_title'],
-                "image_src": comic['image_src'],
+                'comic_title': comic['comic_title'],
+                'image_src': comic['image_src'],
+                'comic_url': comic['comic_url'],
+                'has_prev': comic['has_prev'],
             }
             js_comics[group_key].append(d)
 
     return {
-        "js_offsets": json.dumps(js_offsets, indent=4, sort_keys=True),
-        "js_comics": json.dumps(js_comics, indent=4, sort_keys=True)
+        'js_offsets': json.dumps(js_offsets, indent=4, sort_keys=True),
+        'js_comics': json.dumps(js_comics, indent=4, sort_keys=True)
     }
 
 

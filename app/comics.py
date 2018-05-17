@@ -15,9 +15,10 @@ def fetch_comics_multiple(config, name, count=2):
     print("Config: {}".format(name))
     comic_list = []
     next_url = config['url']
-    has_prev = False
 
     for i in range(count):
+        has_prev = False
+        
         if not next_url:
             # logging.error("Bad selector for next_url for count {0} of {1}".format(i, name))
             # raise Exception("No next_Url for count {0} of {1}".format(i, name))
