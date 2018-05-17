@@ -1,5 +1,17 @@
+import threading
+import logging
 from urllib.parse import urlparse
 
+class ComicListThreaded():
+    def __init__(self):
+        self.comics = []
+        self.lock = threading.Lock()
+
+    def add(self, comics):
+        logging.debug("waiting for lock")
+        with self.lock:
+            logging.debug("acquire lock")
+            self.comics.append(comics)
 
 def grab_attr(soup, selector, attr):
     # return one or None

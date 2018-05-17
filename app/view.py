@@ -10,11 +10,7 @@ env = Environment(
 def generate_js(comics):
     js_offsets = {}
     js_comics = {}
-    print("gen_js")
-    print(comics)
     for group in comics:
-        print("group = ", group)
-
         group_key = group[0]['comic_url']
         js_offsets[group_key] = 0
         js_comics[group_key] = []

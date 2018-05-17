@@ -105,6 +105,7 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
     if not cache_is_expired(request_url, expire_time):
         if text:
             logging.debug("cached Text file: {}".format(request_url))
+            print("cached Text file: {}".format(request_url))
             file = cache[request_url]['local_file']
             filepath = os.path.join(PATH_CACHE, file)
             cache[request_url]['unread'] = False
@@ -113,6 +114,7 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
                 return f.read()
         else:
             logging.debug("cached Binary file: {}".format(request_url))
+            print("cached Binary file: {}".format(request_url))
             file = cache[request_url]['local_file']
             cache[request_url]['unread'] = False
 
