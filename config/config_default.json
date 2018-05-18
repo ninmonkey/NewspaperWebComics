@@ -180,7 +180,7 @@
         "selectors": {
             "image": "img.comic_image",
             "comic_title": null,
-            "prev": "div.comic div.nav a.left"
+            "prev": "div.comic div.nav a"
         }
     },
     "O Human Star Age": {
@@ -203,7 +203,7 @@
         "selectors": {
             "image": "#comic img",
             "comic_title": null,
-            "prev": ".navbuttonarrow a"
+            "prev": ".navbuttonnarrow a"
         }
     },
     "Shark Splode": {

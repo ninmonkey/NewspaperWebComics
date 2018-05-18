@@ -5,7 +5,6 @@ import mimetypes
 import os
 import time
 import urllib3
-import threading
 
 import requests
 
@@ -102,78 +101,64 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
      # requests.get() but cached, and returns: request.text else file name
     global cache
 
-    with lock_request:
-        if not cache_is_expired(request_url, expire_time):
-            if text:
-                logging.debug("cached Text file: {}".format(request_url))
-                file = cache[request_url]['local_file']
-                filepath = os.path.join(PATH_CACHE, file)
-                cache[request_url]['unread'] = False
+    if not cache_is_expired(request_url, expire_time):
+        if text:
+            logging.debug("cached Text file: {}".format(request_url))
+            print("cached Text file: {}".format(request_url))
+            file = cache[request_url]['local_file']
+            filepath = os.path.join(PATH_CACHE, file)
+            cache[request_url]['unread'] = False
 
-                with open(filepath, mode='r', encoding='utf8') as f:
-                    return f.read()
-            else:
-                logging.debug("cached Binary file: {}".format(request_url))
-                file = cache[request_url]['local_file']
-                cache[request_url]['unread'] = False
-
-                return os.path.join('cache', file)
+            with open(filepath, mode='r', encoding='utf8') as f:
+                return f.read()
         else:
-            remove_cached_url(request_url)
+            logging.debug("cached Binary file: {}".format(request_url))
+            print("cached Binary file: {}".format(request_url))
+            file = cache[request_url]['local_file']
+            cache[request_url]['unread'] = False
 
-            if text:
-                logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
-                print("Requesting new Text file! {}".format(request_url))
-            else:
-                logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
-                print("Requesting new Binary file! {}".format(request_url))
+            return os.path.join('cache', file)
+    else:
+        remove_cached_url(request_url)
 
-            r = None
-            try:
-                r = requests.get(request_url)
-            except (requests.exceptions.ConnectionError,
-                    urllib3.exceptions.NewConnectionError,
-                    requests.exceptions.ConnectionError,
-                ):
-                logging.error("Error!: Probably a typo in url = {url}".format(url=request_url), exc_info=True)
+        if text:
+            logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
+            print("Requesting new Text file! {}".format(request_url))
+        else:
+            logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
+            print("Requesting new Binary file! {}".format(request_url))
 
-            if not r:
-                logging.error("Error!: Probably a typo in url = {url}".format(url=request_url))#, exc_info=True)
-                print("Error! No response for url = {}.\n! Check url for typos. !".format(request_url))
-                return None
-                # raise Exception("Error!: Probably a typo in url = {url}".format(url=request_url))
-            if r and not r.ok:
-                logging.error("Error!: code = {code}, reason = {reason}".format(
-                    code=r.status_code, reason=r.reason))#, exc_info=True)
-                print("Error: Error Response for url = {url} code = {code}, reason = {reason}".format(
-                    url=request_url, code=r.status_code, reason=r.reason))
-                return None
-                # raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
+        r = None
+        try:
+            r = requests.get(request_url)
+        except (requests.exceptions.ConnectionError,
+                urllib3.exceptions.NewConnectionError,
+                requests.exceptions.ConnectionError):
+            logging.error("Exception!: Probably a typo in url = {url}".format(url=request_url), exc_info=True)
 
-            time.sleep(DOWNLOAD_DELAY_TIME)
+        # if r is None:
+        #     logging.error("Error!: not r! Probably a typo in url = {url}".format(url=request_url))#, exc_info=True)
+        #     print("Error! not r! No response for url = {}.\n! Check url for typos. !".format(request_url))
+        #     return None
+            # raise Exception("Error!: Probably a typo in url = {url}".format(url=request_url))
 
-            mime_type = r.headers['content-type']
-            ext_type = mimetypes.guess_extension(mime_type) or ''
+        if not r.ok:
+            logging.error("Error!: not r.ok! code = {code}, reason = {reason}, url = {url}".format(
+                code=r.status_code, reason=r.reason, url=r.url))
+            print("Error!: not r.ok! code = {code}, reason = {reason}, url = {url}".format(
+                code=r.status_code, reason=r.reason, url=r.url))  # , exc_info=True)
+            return None
+            # raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
 
-            file = "{datetime}{ext}".format(
-                datetime=datetime.datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
-                ext=ext_type)
-            path = os.path.join(PATH_CACHE, file)
+        time.sleep(DOWNLOAD_DELAY_TIME)
 
-            if text:
-                with open(path, mode='w', encoding='utf-8') as f:
-                    f.write(r.text)
-            else:
-                with open(path, mode='wb') as f:
-                    f.write(r.content)
+        mime_type = r.headers['content-type']
+        ext_type = mimetypes.guess_extension(mime_type) or ''
 
-            cache[request_url] = {
-                'local_file': file,
-                'download_date': datetime.datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
-                'content-type': mime_type,
-                'extension': ext_type,
-                'unread': True,
-            }
+        file = "{datetime}{ext}".format(
+            datetime=datetime.datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
+            ext=ext_type)
+
         if text:
             return r.text
         else:
