@@ -15,25 +15,30 @@ def fetch_comics_multiple(config, name, count=2):
     print("Config: {}".format(name))
     comic_list = []
     next_url = config['url']
+    has_prev = False
 
     for i in range(count):
-        has_prev = False
-        
         if not next_url:
             # logging.error("Bad selector for next_url for count {0} of {1}".format(i, name))
             # raise Exception("No next_Url for count {0} of {1}".format(i, name))
             continue
 
+        print("next")
+        print(config['url'])
+        print(next_url)
         next_url = get_full_url(config['url'], next_url)
+        print(next_url)
 
         html = cache.request_cached_text(next_url)
         if not html:
             continue
 
         soup = BeautifulSoup(html, 'html5lib')
+        # next_url = None
         if config['selectors'].get('prev'):
             next_url = grab_attr(soup, config['selectors']['prev'], 'href')
-            has_prev = True
+            if next_url:
+                has_prev = True
         else:
             next_url = None
         image_src = grab_attr(soup, config['selectors']['image'], 'src')
@@ -67,6 +72,10 @@ def fetch_comics_multiple(config, name, count=2):
             'unread': cache.cache[image_src_full]['unread'],
             'has_prev': has_prev,
         }
+        # if comic not in comic_list:
+        # else:
+        #     print("Uh oh!")
+        #     logging.debug("Uh oh!")
         comic_list.append(comic)
 
     return comic_list

@@ -1,6 +1,7 @@
 import threading
 import logging
-from urllib.parse import urlparse
+from urllib.parse import urljoin
+
 
 class ComicListThreaded():
     def __init__(self):
@@ -12,6 +13,7 @@ class ComicListThreaded():
         with self.lock:
             logging.debug("acquire lock")
             self.comics.append(comics)
+
 
 def grab_attr(soup, selector, attr):
     # return one or None
@@ -36,21 +38,11 @@ def grab_text(soup, selector):
 
 def get_full_url(url_html, url_image):
     # convert relative urls to fully resolvable url
+    # function not necessary anymore, could use raw urljoins()
     if not url_html or not url_image:
         raise ValueError("Requires both html and img urls!")
 
     if url_html == url_image:
         return url_html
 
-    parsed_html = urlparse(url_html)
-    parsed_image = urlparse(url_image)
-
-    image_src_full = '{scheme}://{netloc}/{path}'.format(
-        scheme=parsed_image.scheme or parsed_html.scheme or 'http',
-        netloc=(parsed_image.netloc or parsed_html.netloc).rstrip('/'),
-        path=parsed_image.path.strip().lstrip('/'),
-        # 'params': parsed_image.params,
-        # 'query': parsed_image.query,
-        # 'fragment': parsed_image.fragment,
-    )
-    return image_src_full
+    return urljoin(url_html, url_image)

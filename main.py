@@ -48,10 +48,10 @@ def main_sync(count=3):
     print("Done. Sync.")
 
 
-def work(config, name, count=2):
+def work(config_name, name, count=2):
     global comic_list_threaded
 
-    fetched = fetch_comics_multiple(config, name, count)
+    fetched = fetch_comics_multiple(config_name, name, count)
     comic_list_threaded.add(fetched)
 
 
