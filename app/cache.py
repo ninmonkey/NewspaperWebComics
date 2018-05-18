@@ -136,16 +136,17 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
                 requests.exceptions.ConnectionError):
             logging.error("Exception!: Probably a typo in url = {url}".format(url=request_url), exc_info=True)
 
-        if not r:
-            logging.error("Error!: not r! Probably a typo in url = {url}".format(url=request_url))#, exc_info=True)
-            print("Error! not r! No response for url = {}.\n! Check url for typos. !".format(request_url))
-            return None
+        # if r is None:
+        #     logging.error("Error!: not r! Probably a typo in url = {url}".format(url=request_url))#, exc_info=True)
+        #     print("Error! not r! No response for url = {}.\n! Check url for typos. !".format(request_url))
+        #     return None
             # raise Exception("Error!: Probably a typo in url = {url}".format(url=request_url))
-        if r and not r.ok:
-            logging.error("Error!: code = {code}, reason = {reason}".format(
-                code=r.status_code, reason=r.reason))#, exc_info=True)
-            print("Error: Error Response for url = {url} code = {code}, reason = {reason}".format(
-                url=request_url, code=r.status_code, reason=r.reason))
+
+        if not r.ok:
+            logging.error("Error!: not r.ok! code = {code}, reason = {reason}, url = {url}".format(
+                code=r.status_code, reason=r.reason, url=r.url))
+            print("Error!: not r.ok! code = {code}, reason = {reason}, url = {url}".format(
+                code=r.status_code, reason=r.reason, url=r.url))  # , exc_info=True)
             return None
             # raise Exception("Error: {}, {}!".format(r.status_code, r.reason))
 

@@ -63,6 +63,9 @@ optional:
 
 - generate_js
     - use more data: title, alt, src, 
+    
+- cache.py
+    remove all print statements for a STDOUT logger
 
 - why does image['title'] fail?
     - allow it to be optional like `alt`

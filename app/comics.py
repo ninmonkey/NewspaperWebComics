@@ -23,11 +23,7 @@ def fetch_comics_multiple(config, name, count=2):
             # raise Exception("No next_Url for count {0} of {1}".format(i, name))
             continue
 
-        print("next")
-        print(config['url'])
-        print(next_url)
         next_url = get_full_url(config['url'], next_url)
-        print(next_url)
 
         html = cache.request_cached_text(next_url)
         if not html:
@@ -72,10 +68,6 @@ def fetch_comics_multiple(config, name, count=2):
             'unread': cache.cache[image_src_full]['unread'],
             'has_prev': has_prev,
         }
-        # if comic not in comic_list:
-        # else:
-        #     print("Uh oh!")
-        #     logging.debug("Uh oh!")
         comic_list.append(comic)
 
     return comic_list

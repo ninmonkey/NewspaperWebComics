@@ -9,9 +9,7 @@ class ComicListThreaded():
         self.lock = threading.Lock()
 
     def add(self, comics):
-        logging.debug("waiting for lock")
         with self.lock:
-            logging.debug("acquire lock")
             self.comics.append(comics)
 
 
@@ -38,7 +36,9 @@ def grab_text(soup, selector):
 
 def get_full_url(url_html, url_image):
     # convert relative urls to fully resolvable url
-    # function not necessary anymore, could use raw urljoins()
+    # (almost) not necessary, could use raw urljoins()
+    url_html = url_html.strip()
+    url_image = url_image.strip()
     if not url_html or not url_image:
         raise ValueError("Requires both html and img urls!")
 
