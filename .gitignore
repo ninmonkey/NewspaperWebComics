@@ -6,6 +6,7 @@ __pycache__/
 # this project
 /cache
 /index.html
+/.idea
 
 # C extensions
 *.so
