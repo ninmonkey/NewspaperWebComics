@@ -32,9 +32,12 @@ js_comics = {{ js_vars['js_comics'] }}
     {% if loop.first %}
         <div class="comicContainer">
             <h1>
-                <!-- {%- if comic['unread'] -%}
-                <span class='title'>Title</span>
-                {%- endif -%} -->
+                    {#
+                    {%- if comic['unread'] -%}
+                    <span class='title'>Title</span>
+                    {%- endif -%}
+                    #}
+
                 <a class="comicUrl" href="{{ comic['comic_url']|e }}">
                     {{ comic['comic_name']|e }}:</a>
                 <span class='comicTitle'>{{ comic['comic_title']|e }}</span>

@@ -65,9 +65,9 @@ def fetch_comics_multiple(config, name, count=2):
             'comic_url': config['url'],
             'image_alt': image_alt,
             'image_src': image_local_filename,
-            'unread': cache.cache[image_src_full]['unread'],
             'has_prev': has_prev,
         }
+        # 'unread': cache.cache[image_src_full]['unread'],
         comic_list.append(comic)
 
     return comic_list

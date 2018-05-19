@@ -5,6 +5,7 @@ import mimetypes
 import os
 import time
 import urllib3
+import threading
 
 import requests
 
@@ -14,12 +15,12 @@ from app.str_const import(
 )
 
 cache = {}
-DOWNLOAD_DELAY_TIME = 0.1    # 0 to disable
+DOWNLOAD_DELAY_TIME = 0.2    # 0 to disable
 PATH_CACHE = ''
 DEFAULT_EXPIRE_HTML = datetime.timedelta(days=1)
 DEFAULT_EXPIRE_BINARY = datetime.timedelta(days=15)
 logging = logging.getLogger(__name__)
-lock_request = threading.Lock()
+
 
 def init(path_cache, delay=None):
     global PATH_CACHE
@@ -107,7 +108,7 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
             print("cached Text file: {}".format(request_url))
             file = cache[request_url]['local_file']
             filepath = os.path.join(PATH_CACHE, file)
-            cache[request_url]['unread'] = False
+            # cache[request_url]['unread'] = False
 
             with open(filepath, mode='r', encoding='utf8') as f:
                 return f.read()
@@ -115,12 +116,13 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
             logging.debug("cached Binary file: {}".format(request_url))
             print("cached Binary file: {}".format(request_url))
             file = cache[request_url]['local_file']
-            cache[request_url]['unread'] = False
+            # cache[request_url]['unread'] = False
 
             return os.path.join('cache', file)
     else:
         remove_cached_url(request_url)
 
+        print(request_url)
         if text:
             logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
             print("Requesting new Text file! {}".format(request_url))
