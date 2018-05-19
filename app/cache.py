@@ -124,10 +124,10 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
 
         print(request_url)
         if text:
-            logging.debug("Requesting new Text file! {}\n{}".format(request_url, cache))
+            logging.debug("Requesting new Text file! {}".format(request_url))
             print("Requesting new Text file! {}".format(request_url))
         else:
-            logging.debug("Requesting new Binary file! {}\n{}".format(request_url, cache))
+            logging.debug("Requesting new Binary file! {}".format(request_url))
             print("Requesting new Binary file! {}".format(request_url))
 
         r = None
@@ -160,6 +160,22 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
         file = "{datetime}{ext}".format(
             datetime=datetime.datetime.now().strftime(STR_DATE_FORMAT_MICROSECONDS),
             ext=ext_type)
+        path = os.path.join(PATH_CACHE, file)
+
+        if text:
+            with open(path, mode='w', encoding="utf8") as f:
+                f.write(r.text)
+        else:
+            with open(path, mode='wb') as f:
+                f.write(r.content)
+
+        cache[request_url] = {
+            'local_file': file,
+            'download_date': datetime.datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
+            'content-type': mime_type,
+            'extension': ext_type,
+            # 'unread': True,
+        }
 
         if text:
             return r.text
