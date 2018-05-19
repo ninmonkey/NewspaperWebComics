@@ -29,7 +29,7 @@ comic_list_threaded = ComicListThreaded()
 
 def main_sync(count=3):
     comics = []
-    print("main sync")
+    print("main sync, count = {}".format(count))
     for name in config.config:
         comic_list = fetch_comics_multiple(config.config[name], name, count)
         if comic_list:
@@ -59,7 +59,7 @@ def main_threaded(count=3):
     # url_list = UrlListThreaded()
     threads = []
 
-    print("main_threaded")
+    print("main_threaded. count = {}".format(count))
 
     for name in config.config:
         t = threading.Thread(target=work,args=(config.config[name], name, count))
@@ -87,7 +87,7 @@ def main_threaded(count=3):
 
 if __name__ == "__main__":
     t_start = time.time()
-    main_sync(count=1)
-    # main_threaded(count=1)
+    # main_sync(count=1)
+    main_threaded(count=3)
     t_end = time.time()
     print("Time: {} seconds".format((t_end - t_start)))
