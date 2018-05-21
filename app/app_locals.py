@@ -1,5 +1,4 @@
 import threading
-import logging
 from urllib.parse import urljoin
 
 

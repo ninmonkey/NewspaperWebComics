@@ -31,7 +31,6 @@ def init(path_cache, delay=None):
 
     PATH_CACHE = path_cache
     os.makedirs(PATH_CACHE, exist_ok=True)
-    logging.debug("Cache: {}".format(path_cache))
     cache = read_config()
 
 
@@ -39,7 +38,7 @@ def clear():
     # empty cache
     global cache
 
-    logging.debug("clearing cache")
+    logging.info("clearing cache")
     for file in os.listdir(PATH_CACHE):
         full_path = os.path.join(PATH_CACHE, file)
         if os.path.isfile(full_path):
@@ -54,7 +53,7 @@ def cache_is_expired(request_url, expire_timedelta):
         now = datetime.datetime.now()
         date_downloaded = datetime.datetime.strptime(cache[request_url]['download_date'], STR_DATE_FORMAT_SECONDS)
         use_cache = now - date_downloaded <= expire_timedelta
-        logging.debug("expired file: {}".format(request_url))
+        logging.info("expired file: {}".format(request_url))
         return not use_cache
     else:
         return True
@@ -113,7 +112,7 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
             with open(filepath, mode='r', encoding='utf8') as f:
                 return f.read()
         else:
-            logging.debug("cached Binary file: {}".format(request_url))
+            logging.info("cached Binary file: {}".format(request_url))
             print("cached Binary file: {}".format(request_url))
             file = cache[request_url]['local_file']
             # cache[request_url]['unread'] = False
@@ -124,10 +123,10 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
 
         print(request_url)
         if text:
-            logging.debug("Requesting new Text file! {}".format(request_url))
+            logging.info("Requesting new Text file! {}".format(request_url))
             print("Requesting new Text file! {}".format(request_url))
         else:
-            logging.debug("Requesting new Binary file! {}".format(request_url))
+            logging.info("Requesting new Binary file! {}".format(request_url))
             print("Requesting new Binary file! {}".format(request_url))
 
         r = None

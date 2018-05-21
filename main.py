@@ -21,7 +21,7 @@ logging.getLogger("chardet").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.basicConfig(
     handlers=[logging.FileHandler(os.path.join(LOGGING_DIR, 'main.log'), 'w', 'utf-8')],
-    level=logging.DEBUG)
+    level=logging.INFO)
 
 cache.init(os.path.join(ROOT_DIR, 'cache'))
 comic_list_threaded = ComicListThreaded()
@@ -71,7 +71,6 @@ def main_threaded(count=3):
         if t is main_thread:
             continue
 
-        logging.debug("Joining {}".format(t.getName()))
         t.join()
 
     if ALWAYS_RANDOM:

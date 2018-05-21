@@ -27,35 +27,20 @@ optional:
 
 # bugfix
 
-    0] Stand Still. Stay Silent:, dinoaur comics, Gunnerkrigg, Shark Splode
-
-    1]  nth-of-type says it works but it doesn't seem to 
-    .navbar a:nth-of-type(2)      
-    
-    repl says
-        
-        >>> soup.select(".navbar a:nth-of-type(2)")[0].get('href')
-        'index.php?id=304'
-
-       "http://dawnoftimecomics.com/": [
-        {
-            "comic_title": "Dawn of Time Strip #305 (July 4, 2011)",
-            "image_src": "cache\\2018 05 14 - 16 41 29 519218.png"
-        },
-        {
-            "comic_title": "Dawn of Time Strip #305 (July 4, 2011)",
-            "image_src": "cache\\2018 05 14 - 16 41 29 519218.png"
-        },
-        {
-            "comic_title": "Dawn of Time Strip #305 (July 4, 2011)",
-            "image_src": "cache\\2018 05 14 - 16 41 29 519218.png"
-
-
 # todo
 
-- timed failure if thread is timing out eg. exception
-- screenshot for github
 - auto-free space in /cache/ as needed
+- why did image['title'] fail?
+    - allow it to be optional like `alt`
+        - need dict.get()
+    - related to using html5lib ?
+    - test on: http://www.qwantz.com/
+
+- screenshot for github
+
+- show 'new' images based on 
+    - a local cookie or html5 storage
+    
 - optionally: specify order of comics displayed
 - module js pattern
     - de-duplicate code in js init handlers
@@ -67,12 +52,8 @@ optional:
 - cache.py
     remove all print statements for a STDOUT logger
 
-- why does image['title'] fail?
-    - allow it to be optional like `alt`
-        - need dict.get()
-    - related to using html5lib ?
-    - test on: http://www.qwantz.com/
 
+- timed failure if thread is timing out eg. exception
 - horizontal image center?
 - move html output to /html/
 

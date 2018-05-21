@@ -19,8 +19,6 @@ def fetch_comics_multiple(config, name, count=2):
 
     for i in range(count):
         if not next_url:
-            # logging.error("Bad selector for next_url for count {0} of {1}".format(i, name))
-            # raise Exception("No next_Url for count {0} of {1}".format(i, name))
             continue
 
         next_url = get_full_url(config['url'], next_url)
