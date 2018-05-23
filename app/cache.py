@@ -13,9 +13,12 @@ from app.str_const import(
     STR_DATE_FORMAT_MICROSECONDS,
     STR_DATE_FORMAT_SECONDS,
 )
+from app.app_locals import humanize_bytes
 
 cache = {}
-DOWNLOAD_DELAY_TIME = 0.2    # 0 to disable
+DOWNLOAD_DELAY_TIME = 0.4    # 0 to disable. Time in seconds.
+MAX_DISK_USAGE = 200 * 1024 * 1024  # 200 Mb
+# MAX_DISK_USAGE = 38 * 1024 * 1024  # 38 Mb
 PATH_CACHE = ''
 DEFAULT_EXPIRE_HTML = datetime.timedelta(days=1)
 DEFAULT_EXPIRE_BINARY = datetime.timedelta(days=15)
@@ -26,6 +29,7 @@ def init(path_cache, delay=None):
     global PATH_CACHE
     global cache
     global DOWNLOAD_DELAY_TIME
+
     if delay is not None:
         DOWNLOAD_DELAY_TIME = delay
 
@@ -48,12 +52,52 @@ def clear():
     write_config()
 
 
+def cache_usage():
+    total_bytes = 0
+    for name in cache:
+        total_bytes += cache[name].get('bytes')
+
+    return total_bytes
+
+# partially implemented:
+
+# def clear_cache(size=MAX_DISK_USAGE):
+#     global cache
+#
+#     # sort order is oldest date
+#     cache_by_age = sorted(cache.values(), key=lambda x: x["download_date"])
+#     print(cache_by_age)
+#     remaining_bytes = cache_usage()
+#
+#     # maybe iterate on # cache[:]
+#     while remaining_bytes >= MAX_DISK_USAGE:
+#         if len(cache_by_age) == 0:
+#             break
+#
+#         oldest = cache_by_age[0]
+#
+#         # merge code with remove_cached_url
+#         old_file = oldest['local_file']
+#         old_path = os.path.join(PATH_CACHE, old_file)
+#
+#         print("deleting: {}".format(old_path))
+#         logging.info("deleting: {}".format(old_path))
+#         if os.path.isfile(old_path):
+#             os.remove(old_path)
+#
+#         del cache_by_age[0]
+#         del cache[name]
+#
+#         remaining_bytes = cache_usage()
+#
+#     write_config()
+
+
 def cache_is_expired(request_url, expire_timedelta):
     if request_url in cache:
         now = datetime.datetime.now()
         date_downloaded = datetime.datetime.strptime(cache[request_url]['download_date'], STR_DATE_FORMAT_SECONDS)
         use_cache = now - date_downloaded <= expire_timedelta
-        logging.info("expired file: {}".format(request_url))
         return not use_cache
     else:
         return True
@@ -91,6 +135,7 @@ def remove_cached_url(request_url):
         if old_file:
             old_path = os.path.join(PATH_CACHE, old_file)
             print("deleting: {}".format(old_path))
+            logging.info("deleting: {}".format(old_path))
             if os.path.isfile(old_path):
                 os.remove(old_path)
 
@@ -168,11 +213,14 @@ def _request_cached(request_url, text=True, expire_time=DEFAULT_EXPIRE_HTML):
             with open(path, mode='wb') as f:
                 f.write(r.content)
 
+        statinfo = os.stat(path)
+
         cache[request_url] = {
             'local_file': file,
             'download_date': datetime.datetime.now().strftime(STR_DATE_FORMAT_SECONDS),
             'content-type': mime_type,
             'extension': ext_type,
+            'bytes': statinfo.st_size,
             # 'unread': True,
         }
 

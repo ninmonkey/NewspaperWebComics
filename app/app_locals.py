@@ -45,3 +45,13 @@ def get_full_url(url_html, url_image):
         return url_html
 
     return urljoin(url_html, url_image)
+
+
+def humanize_bytes(num_bytes, suffix='B'):
+    # convert byte count to human readable units
+    num = num_bytes
+    for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
+        if abs(num) < 1024.0:
+            return "{num:.2f}{unit}{suffix}".format(num=num, unit=unit, suffix=suffix)
+        num /= 1024.0
+    return "{num:.2f}{unit}{suffix}".format(num=num, unit='Yi', suffix=suffix)

@@ -27,9 +27,16 @@ optional:
 
 # bugfix
 
+cache error somehow:
+    - cache {} should be thread safe.
+    - But even if not: threads should *never* intersect domains
+    - FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\cppmo_000\\PycharmProjects\\NewspaperWebComics\\cache\\2018 05 19 - 16 50 00 896403'
+
+
 # todo
 
 - auto-free space in /cache/ as needed
+    MAX_DISK_USAGE =  # 200 Mb
 - why did image['title'] fail?
     - allow it to be optional like `alt`
         - need dict.get()
@@ -40,7 +47,7 @@ optional:
 
 - show 'new' images based on 
     - a local cookie or html5 storage
-    
+
 - optionally: specify order of comics displayed
 - module js pattern
     - de-duplicate code in js init handlers
@@ -68,6 +75,8 @@ optional:
     - prev:
         "a[rel='prev']", "a.navi-prev", "a.prev"
 
+- optionally download only headers:
+    http://docs.python-requests.org/en/master/user/advanced/#body-content-workflow
     
 # if dynamic site
 

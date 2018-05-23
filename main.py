@@ -9,6 +9,7 @@ from app import config
 from app import view
 from app.app_locals import (
     ComicListThreaded,
+    humanize_bytes,
 )
 from app.comics import fetch_comics_multiple
 
@@ -86,7 +87,13 @@ def main_threaded(count=3):
 
 if __name__ == "__main__":
     t_start = time.time()
+
     # main_sync(count=1)
     main_threaded(count=3)
+
     t_end = time.time()
-    print("Time: {} seconds".format((t_end - t_start)))
+    print("Time: {:.3f} seconds".format((t_end - t_start)))
+    cache_bytes = humanize_bytes(cache.cache_usage())
+    print("Cache: {0}".format(cache_bytes))
+    # cache.clear_cache()
+
