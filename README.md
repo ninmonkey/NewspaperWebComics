@@ -2,6 +2,14 @@
 
 if this app breaks, edit config.json with new CSS selectors
 
+# features
+   
+- add/remove comics by editing config.json , no DOM parsing needed.
+- fetch the last X number of comics for that site
+- caches requests. auto-deletes oldest when over max usage
+- requires no web server
+- uses threading to download files in parallel 
+x displays  
 
 # example `config.js` entry
 
@@ -34,19 +42,21 @@ cache error somehow:
 
 
 # todo
+## first:
 
-- auto-free space in /cache/ as needed
-    MAX_DISK_USAGE =  # 200 Mb
+- show 'new' images based on 
+    - a local cookie or html5 storage
+    - pass 'date downloaded' to js_vars
+    
 - why did image['title'] fail?
     - allow it to be optional like `alt`
         - need dict.get()
     - related to using html5lib ?
     - test on: http://www.qwantz.com/
 
+   
 - screenshot for github
 
-- show 'new' images based on 
-    - a local cookie or html5 storage
 
 - optionally: specify order of comics displayed
 - module js pattern
@@ -78,9 +88,17 @@ cache error somehow:
 - optionally download only headers:
     http://docs.python-requests.org/en/master/user/advanced/#body-content-workflow
     
+    
+# if static site
+
+- mark/hide read images next time.
+- use cookie or localstorage
+    - mark keep track of individual read, then save to cookie
+    - or just mark read based on last view date in cookie
+        
 # if dynamic site
 
 - display 'new comic'
-    - hide read images next time. (can't if static?)
+    - hide read images next time.
     - auto-mark comics as read when scrolled to
         - read comics will auto-collapse or use lower opacity

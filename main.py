@@ -22,7 +22,7 @@ logging.getLogger("chardet").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.basicConfig(
     handlers=[logging.FileHandler(os.path.join(LOGGING_DIR, 'main.log'), 'w', 'utf-8')],
-    level=logging.INFO)
+    level=logging.ERROR)
 
 cache.init(os.path.join(ROOT_DIR, 'cache'))
 comic_list_threaded = ComicListThreaded()
@@ -45,6 +45,8 @@ def main_sync(count=3):
 
     cache.write_config()
 
+
+
     print(comics)
     print("Done. Sync.")
 
@@ -57,7 +59,6 @@ def work(config_name, name, count=2):
 
 
 def main_threaded(count=3):
-    # url_list = UrlListThreaded()
     threads = []
 
     print("main_threaded. count = {}".format(count))
@@ -93,7 +94,8 @@ if __name__ == "__main__":
 
     t_end = time.time()
     print("Time: {:.3f} seconds".format((t_end - t_start)))
+
+    cache.cache_delete_stale()
     cache_bytes = humanize_bytes(cache.cache_usage())
     print("Cache: {0}".format(cache_bytes))
-    # cache.clear_cache()
 

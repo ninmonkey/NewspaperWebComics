@@ -1,12 +1,4 @@
 {
-    "Stand Still. Stay Silent": {
-        "url": "http://sssscomic.com/comic.php",
-        "selectors": {
-            "image": "img.comicnormal",
-            "comic_title": null,
-            "prev": null
-        }
-    },
     "xkcd": {
         "url": "https://xkcd.com/",
         "selectors": {
@@ -234,6 +226,14 @@
         "url": "http://questionablecontent.net/",
         "selectors": {
             "image": "#comicnav + img",
+            "comic_title": null,
+            "prev": null
+        }
+    },
+      "Stand Still. Stay Silent": {
+        "url": "http://sssscomic.com/comic.php",
+        "selectors": {
+            "image": "img.comicnormal",
             "comic_title": null,
             "prev": null
         }

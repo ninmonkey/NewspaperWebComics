@@ -229,5 +229,13 @@
             "comic_title": null,
             "prev": null
         }
+    },
+      "Stand Still. Stay Silent": {
+        "url": "http://sssscomic.com/comic.php",
+        "selectors": {
+            "image": "img.comicnormal",
+            "comic_title": null,
+            "prev": null
+        }
     }
 }
