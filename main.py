@@ -13,7 +13,6 @@ from app.app_locals import (
 )
 from app.comics import fetch_comics_multiple
 
-ALWAYS_RANDOM = False
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGGING_DIR = os.path.join(ROOT_DIR, 'logs')
 os.makedirs(LOGGING_DIR, exist_ok=True)
@@ -31,12 +30,12 @@ comic_list_threaded = ComicListThreaded()
 def main_sync(count=3):
     comics = []
     print("main sync, count = {}".format(count))
-    for name in config.config:
-        comic_list = fetch_comics_multiple(config.config[name], name, count)
+    for name in config.comics:
+        comic_list = fetch_comics_multiple(config.comics[name], name, count)
         if comic_list:
             comics.append(comic_list)
 
-    if ALWAYS_RANDOM:
+    if config.config["randomize_comics"]:
         random.shuffle(comics)
 
     html = view.render(comics)
@@ -44,8 +43,6 @@ def main_sync(count=3):
         f.write(html)
 
     cache.write_config()
-
-
 
     print(comics)
     print("Done. Sync.")
@@ -63,8 +60,8 @@ def main_threaded(count=3):
 
     print("main_threaded. count = {}".format(count))
 
-    for name in config.config:
-        t = threading.Thread(target=work,args=(config.config[name], name, count))
+    for name in config.comics:
+        t = threading.Thread(target=work,args=(config.comics[name], name, count))
         threads.append(t)
         t.start()
 
@@ -75,7 +72,7 @@ def main_threaded(count=3):
 
         t.join()
 
-    if ALWAYS_RANDOM:
+    if config.config["randomize_comics"]:
         random.shuffle(comic_list_threaded.comics)
 
     html = view.render(comic_list_threaded.comics)
@@ -98,4 +95,7 @@ if __name__ == "__main__":
     cache.cache_delete_stale()
     cache_bytes = humanize_bytes(cache.cache_usage())
     print("Cache: {0}".format(cache_bytes))
+
+    if config.config["auto_open_browser"]:
+        print("auto open browser: NYI")
 

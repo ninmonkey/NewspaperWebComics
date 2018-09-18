@@ -1,8 +1,15 @@
-# NewspaperWebComics
+# NewspaperWebComics : What is this?
 
-if this app breaks, edit config.json with new CSS selectors
+This collects web-comics to one place.
+
+# Why?
+
+I wanted a reader that was automatic, but does **not require a webserver**.
+
 
 # features
+
+if this app breaks, edit config.json with new CSS selectors
    
 - add/remove comics by editing config.json , no DOM parsing needed.
 - fetch the last X number of comics for that site
