@@ -66,7 +66,6 @@ def fetch_comics_multiple(config, name, order, count=2):
             'has_prev': has_prev,
             'comic_order': order,
         }
-        # 'unread': cache.cache[image_src_full]['unread'],
         comic_list.append(comic)
 
     return comic_list

@@ -7,8 +7,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="static/js/comic_changer.js"></script>
     <script>
-js_offsets = {{ js_vars['js_offsets'] }}
-js_comics = {{ js_vars['js_comics'] }}
+let js_offsets = {{ js_vars['js_offsets'] }};
+let js_comics = {{ js_vars['js_comics'] }};
     </script>
 
     <style>
@@ -27,21 +27,21 @@ js_comics = {{ js_vars['js_comics'] }}
 {% block body %}
 
 
-{%- for comic_group in comics -%}
-    {%- for comic in comic_group -%}
+{%- for key in comics.keys() -%}
+    {%- for comic in comics[key] -%}
     {% if loop.first %}
+
         <div class="comicContainer">
             <h1>
-                    {#
-                    {%- if comic['unread'] -%}
-                    <span class='title'>Title</span>
-                    {%- endif -%}
-                    #}
+                {{ comic['comic_url'] }}
+
 
                 <a class="comicUrl" href="{{ comic['comic_url']|e }}">
-                    {{ comic['comic_name']|e }}:</a>
+                {{ comic['comic_name']|e }}:</a>
+
                 <span class='comicTitle'>{{ comic['comic_title']|e }}</span>
             </h1>
+
             {%- if comic['has_prev'] -%}
                 <span class="prevButton"> ← older</span>
                 <span class="nextButton">newer → </span>
@@ -54,8 +54,10 @@ js_comics = {{ js_vars['js_comics'] }}
             {%- endif -%}
 
         </div>
+
     {% endif %}
     {%- endfor -%}
+    }
 {%- endfor -%}
 
 {% endblock body %}
