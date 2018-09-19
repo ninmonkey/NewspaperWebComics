@@ -13,6 +13,34 @@ def generate_js(comics):
     for comic in comics:
         print(comic)
 
+    groups = set()
+    for comic in comics:
+        comic_url = comic['comic_url']
+        groups.add(comic_url)
+        js_comics[comic_url] = []
+
+    print("sets: ", groups)
+
+    for group in groups:
+        print("group: ", group)
+        for comic in comics:
+            comic_url = comic['comic_url']
+            if comic_url == group:
+                d = {
+                    'comic_title': comic['comic_title'],
+                    'image_src': comic['image_src'],
+                    'comic_url': comic['comic_url'],
+                    'has_prev': comic['has_prev'],
+                }
+
+                js_comics[comic_url].append(d)
+                print(d)
+
+    print("Js")
+    print(js_comics)
+
+
+
 
     # for group in comics:
     #     if not group:

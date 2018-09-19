@@ -6,5 +6,13 @@
             "comic_title": "#ctitle",
             "prev": "a[rel='prev']"
         }
+    },
+        "Penny Arcade": {
+        "url": "https://www.penny-arcade.com/comic",
+        "selectors": {
+            "image": "#comicFrame img",
+            "comic_title": "#comic div div h2",
+            "prev": "a.btnPrev"
+        }
     }
 }
