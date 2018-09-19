@@ -10,21 +10,29 @@ env = Environment(
 def generate_js(comics):
     js_offsets = {}
     js_comics = {}
-    for group in comics:
-        if not group:
-            continue
-        group_key = group[0]['comic_url']
-        js_offsets[group_key] = 0
-        js_comics[group_key] = []
+    for comic in comics:
+        print(comic)
 
-        for comic in group:
-            d = {
-                'comic_title': comic['comic_title'],
-                'image_src': comic['image_src'],
-                'comic_url': comic['comic_url'],
-                'has_prev': comic['has_prev'],
-            }
-            js_comics[group_key].append(d)
+
+    # for group in comics:
+    #     if not group:
+    #         continue
+    #
+    #     group_key = group['comic_url']
+    #     print(group_key)
+    #     print(group)
+    #     js_offsets[group_key] = 0
+    #     js_comics[group_key] = []
+    #
+    #     for comic in group:
+    #         d = {
+    #             'comic_title': comic['comic_title'],
+    #             'image_src': comic['image_src'],
+    #             'comic_url': comic['comic_url'],
+    #             'has_prev': comic['has_prev'],
+    #         }
+    #         # js_comics[group_key].append(d)
+    #         # js_comics.append(d)
 
     return {
         'js_offsets': json.dumps(js_offsets, indent=4, sort_keys=True),

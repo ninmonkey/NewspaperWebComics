@@ -7,9 +7,9 @@ class ComicListThreaded():
         self.comics = []
         self.lock = threading.Lock()
 
-    def add(self, comics):
+    def extend(self, comics):
         with self.lock:
-            self.comics.append(comics)
+            self.comics.extend(comics)
 
 
 def grab_attr(soup, selector, attr):

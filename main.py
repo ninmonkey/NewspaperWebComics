@@ -30,15 +30,23 @@ comic_list_threaded = ComicListThreaded()
 def main_sync(count=3):
     comics = []
     print("main sync, count = {}".format(count))
+
+    order = 0
     for name in config.comics:
-        comic_list = fetch_comics_multiple(config.comics[name], name, count)
+        order += 1
+        comic_list = fetch_comics_multiple(config.comics[name], name, order, count)
         if comic_list:
-            comics.append(comic_list)
+            comics.extend(comic_list)
 
     if config.config["randomize_comics"]:
+        print(comics)
         random.shuffle(comics)
+    else:
+        print(comics)
+        comics_ordered = sorted(comics, key=lambda comic: comic['comic_order'])
+        print(type(comics_ordered))
 
-    html = view.render(comics)
+    html = view.render(comics_ordered)
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html)
 
@@ -52,7 +60,8 @@ def work(config_name, name, order, count=2):
     global comic_list_threaded
 
     fetched = fetch_comics_multiple(config_name, name, order, count)
-    comic_list_threaded.add(fetched)
+    # comic_list_threaded.add(fetched)
+    comic_list_threaded.extend(fetched)
 
 
 def main_threaded(count=3):
@@ -84,6 +93,10 @@ def main_threaded(count=3):
         # comics_ordered = sorted(comic_list_threaded.comics)
         # comics_ordered = sorted(comic_list_threaded.comics)
         print(comic_list_threaded.comics)
+        # raise Exception([type(i) for i in comic_list_threaded.comics])
+        print(type(comic_list_threaded.comics))
+        print(comic_list_threaded.comics)
+        # raise Exception(comic_list_threaded.comics)
         comics_ordered = sorted(comic_list_threaded.comics, key=lambda comic: comic['comic_order'])
         print(type(comics_ordered))
 
@@ -104,8 +117,8 @@ def main_threaded(count=3):
 if __name__ == "__main__":
     t_start = time.time()
 
-    # main_sync(count=1)
-    main_threaded(count=3)
+    main_sync(count=2)
+    # main_threaded(count=2)
 
     t_end = time.time()
     print("Time: {:.3f} seconds".format((t_end - t_start)))
