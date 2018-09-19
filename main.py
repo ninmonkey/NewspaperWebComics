@@ -48,10 +48,10 @@ def main_sync(count=3):
     print("Done. Sync.")
 
 
-def work(config_name, name, count=2):
+def work(config_name, name, order, count=2):
     global comic_list_threaded
 
-    fetched = fetch_comics_multiple(config_name, name, count)
+    fetched = fetch_comics_multiple(config_name, name, order, count)
     comic_list_threaded.add(fetched)
 
 
@@ -60,8 +60,10 @@ def main_threaded(count=3):
 
     print("main_threaded. count = {}".format(count))
 
+    order = 0
     for name in config.comics:
-        t = threading.Thread(target=work,args=(config.comics[name], name, count))
+        order += 1
+        t = threading.Thread(target=work, args=(config.comics[name], name, order, count))
         threads.append(t)
         t.start()
 
@@ -74,8 +76,24 @@ def main_threaded(count=3):
 
     if config.config["randomize_comics"]:
         random.shuffle(comic_list_threaded.comics)
+    else:
+        print(comic_list_threaded.comics[0])
+        print(type(comic_list_threaded.comics))
+        print(type(comic_list_threaded.comics[0]))
+        # comics_ordered = sorted(comic_list_threaded.comics, key=lambda comic: comic['comic_order'])
+        # comics_ordered = sorted(comic_list_threaded.comics)
+        # comics_ordered = sorted(comic_list_threaded.comics)
+        print(comic_list_threaded.comics)
+        comics_ordered = sorted(comic_list_threaded.comics, key=lambda comic: comic['comic_order'])
+        print(type(comics_ordered))
 
-    html = view.render(comic_list_threaded.comics)
+
+    # print(comic_list_threaded.comics)
+    # print(comics_ordered)
+
+
+    html = view.render(comics_ordered)
+    # html = view.render(comic_list_threaded.comics)
     cache.write_config()
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html)

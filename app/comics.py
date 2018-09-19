@@ -10,7 +10,7 @@ from app.app_locals import (
 )
 
 
-def fetch_comics_multiple(config, name, count=2):
+def fetch_comics_multiple(config, name, order, count=2):
     # fetch image and metadata from cache/requests, returns `{}` on failure
     print("Config: {}".format(name))
     comic_list = []
@@ -64,6 +64,7 @@ def fetch_comics_multiple(config, name, count=2):
             'image_alt': image_alt,
             'image_src': image_local_filename,
             'has_prev': has_prev,
+            'comic_order': order,
         }
         # 'unread': cache.cache[image_src_full]['unread'],
         comic_list.append(comic)

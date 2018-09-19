@@ -51,6 +51,9 @@ cache error somehow:
 # todo
 ## first:
 
+- optionally clear cache by total size
+- optionally clear cache by age
+
 - show 'new' images based on 
     - a local cookie or html5 storage
     - pass 'date downloaded' to js_vars
