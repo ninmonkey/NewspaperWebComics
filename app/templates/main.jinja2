@@ -33,11 +33,15 @@ let js_comics = {{ js_vars['js_comics'] }};
 
         <div class="comicContainer">
             <h1>
-                {{ comic['comic_url'] }}
 
+                {#
+                    {%- if comic['unread'] -%}
+                    <span class='title'>Title</span>
+                    {%- endif -%}
+                    #}
 
                 <a class="comicUrl" href="{{ comic['comic_url']|e }}">
-                {{ comic['comic_name']|e }}:</a>
+                    {{ comic['comic_name']|e }}:</a>
 
                 <span class='comicTitle'>{{ comic['comic_title']|e }}</span>
             </h1>
