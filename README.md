@@ -49,8 +49,11 @@ cache error somehow:
 
 
 # todo
+
 ## first:
 
+- randomize_comics
+- auto open browser
 - optionally clear cache by total size
 - optionally clear cache by age
 

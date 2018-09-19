@@ -27,7 +27,15 @@ cache.init(os.path.join(ROOT_DIR, 'cache'))
 comic_list_threaded = ComicListThreaded()
 
 
+def work(config_name, name, order, count=3):
+    global comic_list_threaded
+
+    fetched = fetch_comics_multiple(config_name, name, order, count)
+    comic_list_threaded.extend(fetched)
+
+
 def main_sync(count=3):
+    # sync version of of `main_threaded()`
     comics = []
     print("main sync, count = {}".format(count))
 
@@ -39,8 +47,8 @@ def main_sync(count=3):
             comics.extend(comic_list)
 
     if config.config["randomize_comics"]:
-        print(comics)
-        random.shuffle(comics)
+        raise NotImplementedError("randomized comics")
+        # random.shuffle(comics)
     else:
         print(comics)
         comics_ordered = sorted(comics, key=lambda comic: comic['comic_order'])
@@ -56,14 +64,8 @@ def main_sync(count=3):
     print("Done. Sync.")
 
 
-def work(config_name, name, order, count=2):
-    global comic_list_threaded
-
-    fetched = fetch_comics_multiple(config_name, name, order, count)
-    comic_list_threaded.extend(fetched)
-
-
 def main_threaded(count=3):
+    # threaded version of of `main_sync()`
     threads = []
 
     print("main_threaded. count = {}".format(count))
@@ -83,9 +85,9 @@ def main_threaded(count=3):
         t.join()
 
     if config.config["randomize_comics"]:
-        random.shuffle(comic_list_threaded.comics)
+        raise NotImplementedError("randomized comics")
+        # random.shuffle(comic_list_threaded.comics)
     else:
-        print(comic_list_threaded.comics)
         comics_ordered = sorted(comic_list_threaded.comics, key=lambda comic: comic['order'])
 
     html = view.render(comics_ordered)
@@ -100,8 +102,8 @@ def main_threaded(count=3):
 def main():
     t_start = time.time()
 
-    # main_sync(count=2)
-    main_threaded(count=2)
+    # main_sync(count=3)
+    main_threaded(count=3)
 
     t_end = time.time()
     print("Time: {:.3f} seconds".format((t_end - t_start)))
