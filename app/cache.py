@@ -109,7 +109,7 @@ def read_config():
     try:
         with open(json_path, mode='r', encoding='utf-8') as f:
             cache = json.load(f)
-    except (ValueError):
+    except ValueError:
         cache = {}
 
     return cache

@@ -2,7 +2,7 @@ import threading
 from urllib.parse import urljoin
 
 
-class ComicListThreaded():
+class ComicListThreaded:
     def __init__(self):
         self.comics = []
         self.lock = threading.Lock()
