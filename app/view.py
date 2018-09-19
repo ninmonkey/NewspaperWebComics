@@ -21,25 +21,23 @@ def generate_js(grouped_comics):
 
 
 def group_comics(comics):
-    js_comics = {}
-    # for comic in comics:
-    #     print(comic)
+    grouped_comics = {}
 
     groups = set()
     for comic in comics:
-        comic_url = comic['comic_url']
+        comic_url = comic['url']
         groups.add(comic_url)
-        js_comics[comic_url] = []
+        grouped_comics[comic_url] = []
 
     print("sets: ", groups)
 
     for group in groups:
         for comic in comics:
-            comic_url = comic['comic_url']
+            comic_url = comic['url']
             if comic_url == group:
-                js_comics[comic_url].append(comic)
+                grouped_comics[comic_url].append(comic)
 
-    return js_comics
+    return grouped_comics
 
 
 def render(comics):

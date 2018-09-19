@@ -31,7 +31,7 @@ function handle_swap(self, offset) {
 
       // let group_url = $title.attr('href');
       let i = next(group_url, offset);
-      let new_title = js_comics[group_url][i]['comic_title'];
+      let new_title = js_comics[group_url][i]['title'];
       $title.html(new_title);
 
       console.log(group_url, i, new_title);
@@ -61,7 +61,7 @@ $(document).ready(function() {
 
           // let group_url = $title.attr('href');
           let i = next(group_url, 1);
-          let new_title = js_comics[group_url][i]['comic_title'];
+          let new_title = js_comics[group_url][i]['title'];
           let new_src = js_comics[group_url][i]['image_src'];
 
           $title.html(new_title);
@@ -88,7 +88,7 @@ $(document).ready(function() {
 
       // let group_url = $title.attr('href');
       let i = next(group_url, -1);
-      let new_title = js_comics[group_url][i]['comic_title'];
+      let new_title = js_comics[group_url][i]['title'];
       let new_src = js_comics[group_url][i]['image_src'];
 
       $title.html(new_title);

@@ -86,7 +86,7 @@ def main_threaded(count=3):
         random.shuffle(comic_list_threaded.comics)
     else:
         print(comic_list_threaded.comics)
-        comics_ordered = sorted(comic_list_threaded.comics, key=lambda comic: comic['comic_order'])
+        comics_ordered = sorted(comic_list_threaded.comics, key=lambda comic: comic['order'])
 
     html = view.render(comics_ordered)
     # html = view.render(comic_list_threaded.comics)
@@ -97,11 +97,11 @@ def main_threaded(count=3):
     print("Done. Threaded")
 
 
-if __name__ == "__main__":
+def main():
     t_start = time.time()
 
-    main_sync(count=2)
-    # main_threaded(count=2)
+    # main_sync(count=2)
+    main_threaded(count=2)
 
     t_end = time.time()
     print("Time: {:.3f} seconds".format((t_end - t_start)))
@@ -113,3 +113,6 @@ if __name__ == "__main__":
     if config.config["auto_open_browser"]:
         print("auto open browser: NYI")
 
+
+if __name__ == "__main__":
+    main()

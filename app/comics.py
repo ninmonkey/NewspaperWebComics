@@ -57,14 +57,14 @@ def fetch_comics_multiple(config, name, order, count=2):
 
         comic_title = comic_title or image_alt or ''
         comic = {
-            'comic_class': config.get('class'),
-            'comic_name': name,
-            'comic_title': comic_title,
-            'comic_url': config['url'],
+            'class': config.get('class'),
+            'name': name,
+            'title': comic_title,
+            'url': config['url'],
             'image_alt': image_alt,
             'image_src': image_local_filename,
             'has_prev': has_prev,
-            'comic_order': order,
+            'order': order,
         }
         comic_list.append(comic)
 

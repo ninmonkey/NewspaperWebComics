@@ -40,10 +40,10 @@ let js_comics = {{ js_vars['js_comics'] }};
                     {%- endif -%}
                     #}
 
-                <a class="comicUrl" href="{{ comic['comic_url']|e }}">
-                    {{ comic['comic_name']|e }}:</a>
+                <a class="comicUrl" href="{{ comic['url']|e }}">
+                    {{ comic['name']|e }}:</a>
 
-                <span class='comicTitle'>{{ comic['comic_title']|e }}</span>
+                <span class='comicTitle'>{{ comic['title']|e }}</span>
             </h1>
 
             {%- if comic['has_prev'] -%}
@@ -51,8 +51,8 @@ let js_comics = {{ js_vars['js_comics'] }};
                 <span class="nextButton">newer → </span>
                 <br>
             {%- endif %}
-            {% if comic['comic_class'] %}
-                <img class="comicImage {{ comic['comic_class']|e }}" src="{{ comic['image_src']|e }}">
+            {% if comic['class'] %}
+                <img class="comicImage {{ comic['class']|e }}" src="{{ comic['image_src']|e }}">
             {%- else -%}
                 <img class="comicImage" src="{{ comic['image_src']|e }}">
             {%- endif -%}
